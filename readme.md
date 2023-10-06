@@ -4,7 +4,7 @@
 
 ![blaztore home](./assets/blaztore_home.png)
 
-A simple and modest library to implement Flux/Redux pattern in .NET Blazor.
+A simple and modest library to implement **Flux/Redux** pattern in **[.NET Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor)**.
 
 ## Introduction
 
