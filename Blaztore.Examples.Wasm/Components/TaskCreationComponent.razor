@@ -1,0 +1,34 @@
+@inherits Blaztore.Components.StateComponent
+
+@if (!State.IsAddingTask)
+{
+    <button onclick="@(() => Dispatch(new TaskCreationState.StartAddingNewTask()))">
+        New task
+    </button>
+}
+else
+{
+    <div>
+        <input
+            value="@State.NewTaskDescription"
+            @oninput="@(args => Dispatch(new TaskCreationState.DefineNewDescription((string?)args.Value ?? string.Empty)))"/>
+
+        <button
+            disabled="@(string.IsNullOrWhiteSpace(State.NewTaskDescription))"
+            @onclick="@(_ => Dispatch(new TaskCreationState.ExecuteTaskCreation()))">
+            Validate
+        </button>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public EventCallback TaskCreated { get; set; }
+
+    private TaskCreationState State => GetState<TaskCreationState>();
+
+    protected override Task OnAfterInitialRenderAsync() =>
+        Dispatch(new TaskCreationState.Load());
+
+}

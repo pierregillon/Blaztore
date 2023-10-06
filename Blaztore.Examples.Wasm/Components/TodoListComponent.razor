@@ -9,27 +9,6 @@
     }
 </ul>
 
-@if (!State.IsAddingTask)
-{
-    <button onclick="@(() => Dispatch(new TodoListState.StartAddingNewTask()))">
-        New task
-    </button>
-}
-else
-{
-    <div>
-        <input
-            value="@State.NewTaskDescription"
-            @oninput="@(args => Dispatch(new TodoListState.DefineNewDescription((string?)args.Value ?? string.Empty)))"/>
-
-        <button
-            disabled="@(string.IsNullOrWhiteSpace(State.NewTaskDescription))"
-            @onclick="@(_ => Dispatch(new TodoListState.ExecuteTaskCreation()))">
-            Validate
-        </button>
-    </div>
-}
-
 @code {
     private TodoListState State => GetState<TodoListState>();
 
