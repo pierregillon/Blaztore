@@ -4,7 +4,7 @@ using Bunit;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Blaztore.Examples.Wasm.Tests;
+namespace Blaztore.Examples.Wasm.Tests.Components;
 
 public class TaskCreationComponentTests : BUnitTest
 {

@@ -4,10 +4,30 @@
     @foreach (var task in State.TodoListItems)
     {
         <li>
-            @task.Description
+
+            <input
+                type="checkbox"
+                value="@task.IsDone"
+                @oninput="@(args => Dispatch(new TodoListState.ToggleIsDone(task.Id, (bool?)args.Value ?? false)))"/>
+
+            <span class="@(task.IsDone ? "checked" : string.Empty)">
+                @task.Description
+            </span>
+
+            <button
+                @onclick="@(_ => Dispatch(new TodoListState.DeleteItem(task.Id)))">
+                Delete
+            </button>
         </li>
     }
 </ul>
+
+<style>
+    .checked {
+        font-style: italic;
+        text-decoration: line-through;
+    }
+</style>
 
 @code {
     private TodoListState State => GetState<TodoListState>();

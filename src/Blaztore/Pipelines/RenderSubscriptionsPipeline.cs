@@ -31,7 +31,7 @@ internal record RenderSubscriptionsPipeline<TRequest, TResponse>(
         var result = await next();
 
         var newState = actionDescriptor.GetState(Store);
-
+        
         if (!Equals(initialState, newState))
         {
             actionDescriptor.ReRenderComponents(Subscriptions);
@@ -43,7 +43,7 @@ internal record RenderSubscriptionsPipeline<TRequest, TResponse>(
     private static ActionDescriptor? GetActionDescriptor(IAction action)
     {
         var actionInterfaceType = GetActionInterface(action);
-
+        
         if (actionInterfaceType is null)
         {
             return null;

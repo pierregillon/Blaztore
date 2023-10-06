@@ -23,10 +23,6 @@ else
 }
 
 @code {
-
-    [Parameter]
-    public EventCallback TaskCreated { get; set; }
-
     private TaskCreationState State => GetState();
 
     protected override Task OnAfterInitialRenderAsync() =>
