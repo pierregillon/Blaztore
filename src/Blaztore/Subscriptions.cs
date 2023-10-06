@@ -44,7 +44,7 @@ public class Subscriptions
         lock (_subscriptions)
         {
             subscriptions = _subscriptions
-                .Where(aRecord => aRecord.StateType == stateType)
+                .Where(subscription => subscription.StateType == stateType)
                 .ToArray();
         }
 

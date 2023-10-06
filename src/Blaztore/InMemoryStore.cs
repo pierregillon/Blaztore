@@ -8,55 +8,72 @@ public class InMemoryStore : IStore
     private readonly IDictionary<(Type StateType, object StateScope), IState> _states =
         new ConcurrentDictionary<(Type, object), IState>();
 
-    public T GetState<T>(object scope) where T : IState
-    {
-        if (!_states.TryGetValue((typeof(T), scope), out var state))
-        {
-            lock (_states)
-            {
-                if (_states.TryGetValue((typeof(T), scope), out state))
-                {
-                    return (T)state;
-                }
-
-                state = CreateDefaultState<T>();
-                _states.Add((typeof(T), scope), state);
-            }
-        }
-
-        return (T)state;
-    }
-
-    public T GetState<T>() where T : IState => 
+    public T GetState<T>() where T : IState =>
         GetState<T>(DefaultScope.Value);
 
-    private static IState CreateDefaultState<T>() where T : IState
+    public T GetState<T>(object scope) where T : IState =>
+        (T)GetState(typeof(T), scope);
+
+    public object GetState(Type stateType) => 
+        GetState(stateType, DefaultScope.Value);
+
+    public object GetState(Type stateType, object scope)
     {
-        var initializeMethod = typeof(T).GetMethod("Initialize", BindingFlags.Static | BindingFlags.Public);
+        lock (_states)
+        {
+            if (_states.TryGetValue((stateType, scope), out var state))
+            {
+                return state;
+            }
+
+            state = CreateDefaultState(stateType);
+            
+            _states.Add((stateType, scope), state);
+
+            return state;
+        }
+    }
+
+    private static IState CreateDefaultState(Type type)
+    {
+        var initializeMethod = type.GetMethod("Initialize", BindingFlags.Static | BindingFlags.Public);
         if (initializeMethod is null)
         {
             throw new InvalidOperationException(
-                $"A static Initialize() method should be defined on type {typeof(T).Name} in order to have the initial state.");
+                $"A static Initialize() method should be defined on type {type.Name} in order to have the initial state."
+            );
         }
 
-        return (T)initializeMethod.Invoke(null, Array.Empty<object?>())!;
+        return (IState)initializeMethod.Invoke(null, Array.Empty<object?>())!;
     }
 
-    public void SetState<T>(T state, object scope) where T : IState => 
-        _states[(typeof(T), scope)] = state;
+    public void SetState<T>(T state, object scope) where T : IState
+    {
+        lock (_states)
+        {
+            _states[(typeof(T), scope)] = state;
+        }
+    }
 
-    public void SetState<T>(T state) where T : IState => 
-        SetState(state, DefaultScope.Value);
+    public void SetState<T>(T state) where T : IState => SetState(state, DefaultScope.Value);
 
-    public IReadOnlyCollection<T> GetAllStates<T>() where T : IState =>
-        _states.Values.Where(x => x is T).Cast<T>().ToList();
+    public IReadOnlyCollection<T> GetAllStates<T>() where T : IState
+    {
+        lock (_states)
+        {
+            return _states.Values.Where(x => x is T).Cast<T>().ToList();
+        }
+    }
 
     public void UpdateState<T>(T previousState, T newState) where T : IState
     {
-        var keyPair = _states.Single(x => Equals(x.Value, previousState));
+        lock (_states)
+        {
+            var keyPair = _states.Single(x => Equals(x.Value, previousState));
 
-        _states.Remove(keyPair);
+            _states.Remove(keyPair);
 
-        _states.Add((typeof(T), keyPair.Key.StateScope), newState);
+            _states.Add((typeof(T), keyPair.Key.StateScope), newState);
+        }
     }
 }
