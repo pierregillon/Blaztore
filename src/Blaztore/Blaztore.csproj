@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <Version>1.1</Version>
+        <Version>1.1.1</Version>
         <Title>Crafty CQRS</Title>
         <Description>A simple and modest library to implement Flux/Redux pattern in .NET Blazor</Description>
         <PackageTags>.net dotnet csharp blazor flux redux mvu mediatr architecture</PackageTags>
@@ -14,7 +14,7 @@
         <PackageProjectUrl>https://github.com/pierregillon/Blaztore</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pierregillon/Blaztore</RepositoryUrl>
         <Authors>Pierre GILLON</Authors>
-        <PackageIconUrl>https://github.com/pierregillon/Blaztore/main/assets/blaster_vectorized_128x128.png</PackageIconUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/pierregillon/Blaztore/eea60f37136da2d75f250624bef03cd06f648610/assets/blaster_vectorized_128x128.png</PackageIconUrl>
     </PropertyGroup>
 
     <ItemGroup>
