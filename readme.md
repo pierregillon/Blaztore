@@ -26,11 +26,12 @@ If you are not satisfied by this library, don't hesitate to check them out, they
 ## Advantages
 
 Compared to the listed existing libraries, Blaztore has the following advantages:
-- ✅ Centered on immutability of every concepts (State, Action, ...)
-- ✅ Never force us to inherit from a **base class or a base record**. Every concepts are based on interfaces. It allows you to structure your code as you like (multiple handling, file structure, ...)
-- ✅ Use the underlying MediatR library to dispatch action. It allows you to easily implement pipeline or preprocessing if you want custom code.
-- ✅ Use Flux/Redux terminology and not a custom one.
-- ✅ Provide scoped-state that allows to handle multiple instance of the same state type, but uniquely identified by an id
+- ✅ Focused on **immutability** for every concepts (State, Action, ...)
+- ✅ Never force you to inherit from a **base class or a base record**. Every concepts are based on interfaces. It allows you to structure your code as you like (multiple handling, file structure, ...)
+- ✅ Use the underlying [MediatR](https://github.com/jbogard/MediatR) library to dispatch actions. 
+It is highly extendable and allows you to easily implement **pipeline** or **preprocessing** to add loggers, retry pattern, ...
+- ✅ Use the **Flux/Redux** terminology and not a custom one.
+- ✅ Enable to store **multiple instances** of the same state type, identified by a unique id.
 
 ## Installation
 
@@ -49,7 +50,7 @@ In .NET **record** is largely recommended for state immutability.
 ```csharp
 public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) : IState
 {
-    // Mandatory method to create the initial state.
+    // Mandatory static factory method to create the initial state.
     public static TaskCreationState Initialize() => new(false, null);
 }
 ```
@@ -60,15 +61,21 @@ You must implement `IAction<TState>` to explicitly define for which state is thi
 ```csharp
 public record StartAddingNewTask : IAction<TaskCreationState>;
 
-public record DefineNewDescription(string NewDescription) : IAction<TaskCreationState>
+public record DefineNewDescription(string NewDescription) : IAction<TaskCreationState>;
 
 public record TaskListLoaded(IReadOnlyCollection<TaskListItem> Payload) : IAction<TaskListState>;
 ```
 
-### Getting state reference and dispatching actions for a component
+### Get state reference and dispatch actions from a component
 A base component `StateComponent` is provided to easily access the `Dispatch<TAction>(TAction action)` and `GetState<TState>()` method.
 ```html
 @inherits Blaztore.Components.StateComponent
+```
+You can dispatch actions directly from the html, you have no more *code-behind* !
+```html
+<button onclick="@(() => Dispatch(new StartAddingNewTask()))">
+    New task
+</button>
 ```
 ```csharp
 @code {
@@ -79,19 +86,10 @@ A base component `StateComponent` is provided to easily access the `Dispatch<TAc
         Dispatch(new TaskCreationState.Load());
 }
 ```
-You can dispatch action directly from the html, you have no more *code-behind* !
-```html
-<button onclick="@(() => Dispatch(new StartAddingNewTask()))">
-    New task
-</button>
-```
-
-You can find more code on the [examples folder](/src/Blaztore.Examples.Wasm).
-
 ### Reducer
 
 A pure reducer is a function that execute an action on a state, returning a new state.
-Theoretically, it should not have any dependencies.
+Theoretically, it should not have any dependencies and generates no side effects.
 
 ```csharp
 public record TaskCreationStateReducer(IStore Store) 
@@ -105,13 +103,12 @@ public record TaskCreationStateReducer(IStore Store)
 }
 ```
 
-You can organize you reducers like you prefer: a reducer for each action or a single reducer for all your actions.
-
+You can organize you reducers as you prefer: a reducer *for each* action or a *single* reducer for all your actions.
 
 ```csharp
 public record StartAddingNewTaskReducer(IStore Store) 
     : IPureReducer<TaskCreationState, StartAddingNewTask>,
-    : IPureReducer<TaskCreationState, EndAddingNewTask>
+      IPureReducer<TaskCreationState, EndAddingNewTask>
 {
     public TaskCreationState Reduce(TaskCreationState state, StartAddingNewTask action) =>
         state with
@@ -134,8 +131,11 @@ public record StartAddingNewTaskReducer(IStore Store)
 An effect allows you to execute **side effects** on external system and dispatching new actions.
 
 ```csharp
-public record ExecuteTaskCreationEffect(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)
-    : IEffect<TaskCreationState, ExecuteTaskCreation>
+public record ExecuteTaskCreationEffect(
+    IStore Store, 
+    ITodoListApi Api, 
+    IActionDispatcher ActionDispatcher
+) : IEffect<TaskCreationState, ExecuteTaskCreation>
 {
     public async Task Effect(TaskCreationState state, ExecuteTaskCreation action)
     {
@@ -150,3 +150,5 @@ public record ExecuteTaskCreationEffect(IStore Store, ITodoListApi Api, IActionD
     }
 }
 ```
+
+You can find more code on the [examples folder](/src/Blaztore.Examples.Wasm).
