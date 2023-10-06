@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{8F893531-35B
 		..\LICENSE = ..\LICENSE
 		..\readme.md = ..\readme.md
 		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
+		..\docs\diagrams.md = ..\docs\diagrams.md
 	EndProjectSection
 EndProject
 Global

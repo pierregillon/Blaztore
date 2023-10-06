@@ -11,6 +11,8 @@ A simple and modest library to implement **Flux/Redux** pattern in **[.NET Blazo
 If you are not familiar with the Flux/Redux model, have a look on the following nice resources:
 - [ReduxJs](https://redux.js.org/tutorials/essentials/part-1-overview-concepts)
 
+You can find diagrams [**here**](docs/diagrams.md) to help you understand.
+
 ## Goal
 
 Blazor does not contain a native Flux/Redux or MVU api internally.
