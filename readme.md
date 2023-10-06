@@ -30,6 +30,12 @@ Compared to the listed existing libraries, Blaztore has the following advantages
 - ✅ Use Flux/Redux terminology and not a custom one.
 - ✅ Provide scoped-state that allows to handle multiple instance of the same state type, but uniquely identified by an id
 
+## Installation
+
+You can download the latest release NuGet packages from the official Blaztor nuget pages.
+
+- [Blaztore](https://www.nuget.org/packages/Blaztore) ![Nuget](https://img.shields.io/badge/dynamic/xml?color=blue&label=Nuget&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
+
 ## Getting started
 
 You can find below examples to illustrate how to implement concepts with **Blazstore**.
@@ -46,7 +52,8 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 }
 ```
 ### Action
-Actions are messages that can represent a command to mutate the system or an event that happened in the system.
+Actions are messages that can represent a **command** to mutate the system or an **event** that happened in the system.
+You must implement `IAction<TState>` to explicitly define for which state is this action.
 
 ```csharp
 public record StartAddingNewTask : IAction<TaskCreationState>;
@@ -58,6 +65,9 @@ public record TaskListLoaded(IReadOnlyCollection<TaskListItem> Payload) : IActio
 
 ### Getting state reference and dispatching actions for a component
 A base component `StateComponent` is provided to easily access the `Dispatch<TAction>(TAction action)` and `GetState<TState>()` method.
+```html
+@inherits Blaztore.Components.StateComponent
+```
 ```csharp
 @code {
 
@@ -93,7 +103,7 @@ public record TaskCreationStateReducer(IStore Store)
 }
 ```
 
-You can organize you reducer like you prefer: a reducer for each action or a single reducer for all your actions.
+You can organize you reducers like you prefer: a reducer for each action or a single reducer for all your actions.
 
 
 ```csharp
@@ -138,9 +148,3 @@ public record ExecuteTaskCreationEffect(IStore Store, ITodoListApi Api, IActionD
     }
 }
 ```
-
-## Installation
-
-You can download the latest release NuGet packages from the official Blaztor nuget pages.
-
-- [Blaztore](https://www.nuget.org/packages/Blaztore) ![Nuget](https://img.shields.io/badge/dynamic/xml?color=blue&label=Nuget&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
