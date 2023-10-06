@@ -2,6 +2,8 @@
 
 [![.NET](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml)
 
+![blaztore home](./assets/blaztore_home.png)
+
 A simple and modest library to implement Flux/Redux pattern in .NET Blazor.
 
 ## Introduction
