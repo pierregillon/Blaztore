@@ -29,11 +29,11 @@ public class Subscriptions
         }
     }
 
-    public void Remove(IStateComponent aStateComponent)
+    public void Remove(IStateComponent stateComponent)
     {
         lock (_subscriptions)
         {
-            _subscriptions.RemoveAll(aRecord => aRecord.ComponentId == aStateComponent.Id);
+            _subscriptions.RemoveAll(aRecord => aRecord.ComponentId == stateComponent.Id);
         }
     }
 

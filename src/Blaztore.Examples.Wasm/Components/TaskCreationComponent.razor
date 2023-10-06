@@ -1,8 +1,9 @@
-@inherits Blaztore.Components.StateComponent
+@inherits Blaztore.Components.StateComponent<TaskCreationState>
 
 @if (!State.IsAddingTask)
 {
-    <button onclick="@(() => Dispatch(new TaskCreationState.StartAddingNewTask()))">
+    <button 
+        onclick="@(() => Dispatch(new TaskCreationState.StartAddingNewTask()))">
         New task
     </button>
 }
@@ -26,9 +27,8 @@ else
     [Parameter]
     public EventCallback TaskCreated { get; set; }
 
-    private TaskCreationState State => GetState<TaskCreationState>();
+    private TaskCreationState State => GetState();
 
     protected override Task OnAfterInitialRenderAsync() =>
         Dispatch(new TaskCreationState.Load());
-
 }
