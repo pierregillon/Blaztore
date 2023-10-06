@@ -6,11 +6,8 @@ public interface IActionHandler<in TAction, in TState> : IRequestHandler<TAction
     where TState : IState
     where TAction : IAction<TState>
 {
-    Task IRequestHandler<TAction>.Handle(TAction request, CancellationToken _)
-    {
-        var state = Store.GetState<TState>();
-        return Handle(request, state);
-    }
+    Task IRequestHandler<TAction>.Handle(TAction action, CancellationToken _) =>
+        Handle(action, action.GetState(Store));
 
     IStore Store { get; }
 
@@ -20,7 +17,7 @@ public interface IActionHandler<in TAction, in TState> : IRequestHandler<TAction
 public interface IActionHandler<in TAction> : IRequestHandler<TAction>
     where TAction : IAction
 {
-    Task IRequestHandler<TAction>.Handle(TAction request, CancellationToken _) => Handle(request);
+    Task IRequestHandler<TAction>.Handle(TAction action, CancellationToken _) => Handle(action);
 
     Task Handle(TAction action);
 }

@@ -35,19 +35,6 @@ public record TodoListState(
         }
     }
     
-    public record DeleteItem(Guid Id) : IAction<TodoListState>
-    {
-        private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)
-            : IEffect<TodoListState, DeleteItem>
-        {
-            public async Task Effect(TodoListState state, DeleteItem action)
-            {
-                await Api.Delete(action.Id);
-                await ActionDispatcher.Dispatch(new Load());
-            }
-        }
-    }
-    
     public record ToggleIsDone(Guid Id, bool IsDone) : IAction<TodoListState>
     {
         private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)

@@ -16,13 +16,14 @@ public class InMemoryTodoListApi : ITodoListApi
         return Task.CompletedTask;
     }
 
-    public Task Delete(Guid id)
+    public async Task Delete(Guid id)
     {
         _tasks = _tasks
             .Where(x => x.Id != id)
             .ToList();
-        
-        return Task.CompletedTask;
+
+        // Simulate a long operation
+        await Task.Delay(500);
     }
 
     public Task MarkAsDone(Guid id)

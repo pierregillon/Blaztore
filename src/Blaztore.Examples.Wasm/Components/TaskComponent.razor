@@ -12,8 +12,16 @@
     </span>
     
     <button
-        @onclick="@(_ => Dispatch(new TodoListState.DeleteItem(Task.Id)))">
-        Delete
+        @onclick="@(_ => Dispatch(new TaskComponentState.DeleteItem(Task.Id)))"
+        disabled="@State.IsDeleting">
+        @if (State.IsDeleting)
+        {
+            <span>...</span>
+        }
+        else
+        {
+            <span>Delete</span>
+        }
     </button>
 </div>
 
@@ -43,4 +51,5 @@
     [Parameter]
     public TaskListItem Task { get; set; } = default!;
 
+    private TaskComponentState State => GetState<TaskComponentState>(Task.Id);
 }

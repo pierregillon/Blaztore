@@ -6,19 +6,6 @@ public interface IActionApplier<in TAction, TState> : IActionHandler<TAction, TS
 {
     public Task<TState> Apply(TAction action, TState state);
 
-    async Task IActionHandler<TAction, TState>.Handle(TAction action, TState state)
-    {
-        if (action is IActionOnScopedState actionOnScopedState)
-        {
-            var newState = await Apply(action, state);
-
-            Store.SetState(newState, actionOnScopedState.Scope);
-        }
-        else
-        {
-            var newState = await Apply(action, state);
-
-            Store.SetState(newState);
-        }
-    }
+    async Task IActionHandler<TAction, TState>.Handle(TAction action, TState state) =>
+        action.SetState(Store, await Apply(action, state));
 }
