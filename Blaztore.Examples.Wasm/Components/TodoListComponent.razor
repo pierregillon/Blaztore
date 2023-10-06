@@ -1,0 +1,39 @@
+@inherits Blaztore.Components.StateComponent
+
+<ul>
+    @foreach (var task in State.TodoListItems)
+    {
+        <li>
+            @task.Description
+        </li>
+    }
+</ul>
+
+@if (State.IsAddingTask)
+{
+    <div>
+        <input
+            value="@State.NewTaskDescription"/>
+
+        <button>
+            Validate
+        </button>
+    </div>
+}
+else
+{
+    <button>
+        New task
+    </button>
+}
+
+
+
+
+@code {
+    private TodoListState State => GetState<TodoListState>();
+
+    protected override Task OnAfterInitialRenderAsync() =>
+        Execute(new TodoListState.Load());
+
+}
