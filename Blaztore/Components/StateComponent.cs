@@ -20,7 +20,7 @@ public class StateComponent : ExtendedComponentBase, IStateComponent, IDisposabl
     [Inject] private IStore Store { get; set; } = default!;
     [Inject] private Subscriptions Subscriptions { get; set; } = default!;
 
-    protected Task Execute(IAction action) => ActionDispatcher.Dispatch(action);
+    protected Task Dispatch(IAction action) => ActionDispatcher.Dispatch(action);
 
     protected T GetState<T>() where T : IState => GetState<T>(DefaultScope.Value);
 

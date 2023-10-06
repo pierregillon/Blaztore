@@ -44,7 +44,7 @@ public class TodoListComponentTests : BUnitTest
         var component = RenderComponent<TodoListComponent>();
 
         component
-            .Find("button:contains('New Task')")
+            .Find("button:contains('New task')")
             .Should()
             .NotBeNull();
     }
@@ -55,11 +55,11 @@ public class TodoListComponentTests : BUnitTest
         var component = RenderComponent<TodoListComponent>();
 
         component
-            .Find("button:contains('New Task')")
+            .Find("button:contains('New task')")
             .Click();
 
         component
-            .FindAll("button:contains('New Task')")
+            .FindAll("button:contains('New task')")
             .Should()
             .BeEmpty();
     }
@@ -70,7 +70,7 @@ public class TodoListComponentTests : BUnitTest
         var component = RenderComponent<TodoListComponent>();
 
         component
-            .Find("button:contains('New Task')")
+            .Find("button:contains('New task')")
             .Click();
 
         component
@@ -81,6 +81,86 @@ public class TodoListComponentTests : BUnitTest
         component
             .Find("button:contains('Validate')")
             .Should()
-            .NotBeNull();
+            .NotBeNull()
+            .And
+            .BeDisabled();
+    }
+
+    [Fact]
+    public void Filling_input_enables_validate_button()
+    {
+        var component = RenderComponent<TodoListComponent>();
+
+        component
+            .Find("button:contains('New task')")
+            .Click();
+
+        component
+            .Find("input")
+            .Input("task 1");
+
+        component
+            .Find("button:contains('Validate')")
+            .Should()
+            .BeEnabled();
+    }
+
+    [Fact]
+    public void Validating_posts_request_to_api()
+    {
+        var component = RenderComponent<TodoListComponent>();
+
+        CreateTask(component, "task 1");
+
+        GetService<ITodoListApi>()
+            .Received(1)
+            .Create(Arg.Any<Guid>(), "task 1");
+    }
+
+    [Fact]
+    public void Creating_new_task_reset_form_creation()
+    {
+        var component = RenderComponent<TodoListComponent>();
+
+        CreateTask(component, "task 1");
+
+        component
+            .FindAll("input")
+            .Should()
+            .BeEmpty();
+
+        component
+            .FindAll("button:contains('Validate')")
+            .Should()
+            .BeEmpty();
+    }
+
+    [Fact]
+    public void Creating_new_task_reload_list()
+    {
+        var component = RenderComponent<TodoListComponent>();
+
+        GetService<ITodoListApi>().ClearReceivedCalls();
+
+        CreateTask(component, "task 1");
+
+        GetService<ITodoListApi>()
+            .Received(1)
+            .GetAll();
+    }
+
+    private static void CreateTask(IRenderedFragment component, string description)
+    {
+        component
+            .Find("button:contains('New task')")
+            .Click();
+
+        component
+            .Find("input")
+            .Input(description);
+
+        component
+            .Find("button:contains('Validate')")
+            .Click();
     }
 }

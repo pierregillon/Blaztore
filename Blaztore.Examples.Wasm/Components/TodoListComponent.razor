@@ -9,31 +9,31 @@
     }
 </ul>
 
-@if (State.IsAddingTask)
+@if (!State.IsAddingTask)
+{
+    <button onclick="@(() => Dispatch(new TodoListState.StartAddingNewTask()))">
+        New task
+    </button>
+}
+else
 {
     <div>
         <input
-            value="@State.NewTaskDescription"/>
+            value="@State.NewTaskDescription"
+            @oninput="@(args => Dispatch(new TodoListState.DefineNewDescription((string?)args.Value ?? string.Empty)))"/>
 
-        <button>
+        <button
+            disabled="@(string.IsNullOrWhiteSpace(State.NewTaskDescription))"
+            @onclick="@(_ => Dispatch(new TodoListState.ExecuteTaskCreation()))">
             Validate
         </button>
     </div>
 }
-else
-{
-    <button>
-        New task
-    </button>
-}
-
-
-
 
 @code {
     private TodoListState State => GetState<TodoListState>();
 
     protected override Task OnAfterInitialRenderAsync() =>
-        Execute(new TodoListState.Load());
+        Dispatch(new TodoListState.Load());
 
 }
