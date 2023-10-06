@@ -28,9 +28,9 @@ public record TaskComponentState(bool IsDeleting) : IState
     {
         public object Scope => Id;
         
-        private record Reducer(IStore Store) : IPureReducer<TaskComponentState, StartDeleting>
+        private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, StartDeleting>
         {
-            public TaskComponentState Reduce(TaskComponentState state, StartDeleting action) =>
+            public TaskComponentState Reduce(TaskComponentState state) =>
                 state with
                 {
                     IsDeleting = true
@@ -42,9 +42,9 @@ public record TaskComponentState(bool IsDeleting) : IState
     {
         public object Scope => Id;
         
-        private record Reducer(IStore Store) : IPureReducer<TaskComponentState, EndDeleting>
+        private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, EndDeleting>
         {
-            public TaskComponentState Reduce(TaskComponentState state, EndDeleting action) =>
+            public TaskComponentState Reduce(TaskComponentState state) =>
                 state with
                 {
                     IsDeleting = false

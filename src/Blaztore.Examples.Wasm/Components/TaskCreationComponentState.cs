@@ -9,9 +9,9 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 
     public record Load : IAction<TaskCreationState>
     {
-        private record Reducer(IStore Store) : IPureReducer<TaskCreationState, Load>
+        private record Reducer(IStore Store) : IPureReducerNoAction<TaskCreationState, Load>
         {
-            public TaskCreationState Reduce(TaskCreationState state, Load action) =>
+            public TaskCreationState Reduce(TaskCreationState state) =>
                 state with
                 {
                     IsAddingTask = false,
@@ -22,9 +22,9 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 
     public record StartAddingNewTask : IAction<TaskCreationState>
     {
-        private record Reducer(IStore Store) : IPureReducer<TaskCreationState, StartAddingNewTask>
+        private record Reducer(IStore Store) : IPureReducerNoAction<TaskCreationState, StartAddingNewTask>
         {
-            public TaskCreationState Reduce(TaskCreationState state, StartAddingNewTask action) =>
+            public TaskCreationState Reduce(TaskCreationState state) =>
                 state with
                 {
                     IsAddingTask = true
@@ -66,9 +66,9 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 
     public record EndAddingNewTask : IAction<TaskCreationState>
     {
-        private record Reducer(IStore Store) : IPureReducer<TaskCreationState, EndAddingNewTask>
+        private record Reducer(IStore Store) : IPureReducerNoAction<TaskCreationState, EndAddingNewTask>
         {
-            public TaskCreationState Reduce(TaskCreationState state, EndAddingNewTask action) =>
+            public TaskCreationState Reduce(TaskCreationState state) =>
                 state with
                 {
                     NewTaskDescription = null,

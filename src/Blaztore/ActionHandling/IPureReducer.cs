@@ -1,11 +1,11 @@
 namespace Blaztore.ActionHandling;
 
-public interface IPureReducer<TState, in TAction> : IActionApplier<TAction, TState>
+public interface IPureReducer<TState, in TAction> : IReducer<TState, TAction> 
+    where TAction : IAction<TState> 
     where TState : IState
-    where TAction : IAction<TState>
 {
-    public TState Reduce(TState state, TAction action);
-
-    Task<TState> IActionApplier<TAction, TState>.Apply(TAction action, TState state) =>
+    public new TState Reduce(TState state, TAction action);
+    
+    Task<TState> IReducer<TState, TAction>.Reduce(TState state, TAction action) =>
         Task.FromResult(Reduce(state, action));
 }
