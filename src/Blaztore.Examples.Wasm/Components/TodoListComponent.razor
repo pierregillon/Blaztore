@@ -1,0 +1,18 @@
+@inherits Blaztore.Components.StateComponent
+
+<ul>
+    @foreach (var task in State.TodoListItems)
+    {
+        <li>
+            @task.Description
+        </li>
+    }
+</ul>
+
+@code {
+    private TodoListState State => GetState<TodoListState>();
+
+    protected override Task OnAfterInitialRenderAsync() =>
+        Dispatch(new TodoListState.Load());
+
+}
