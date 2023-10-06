@@ -9,11 +9,12 @@ public abstract class BaseStateComponent : ExtendedComponentBase, IStateComponen
     protected BaseStateComponent()
     {
         var name = GetType().Name;
+        
         var count = InstanceCounts.AddOrUpdate(name, 1, (_, value) => value + 1);
 
-        Id = $"{name}-{count}";
+        Id = new ComponentId(name, count);
     }
     
-    public string Id { get; }
+    public ComponentId Id { get; }
     public void ReRender() => InvokeAsync(StateHasChanged);
 }

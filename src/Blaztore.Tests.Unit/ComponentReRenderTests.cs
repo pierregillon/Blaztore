@@ -93,7 +93,7 @@ public class ComponentReRenderTests
     private static IStateComponent CreateStateComponent()
     {
         var component = Substitute.For<IStateComponent>();
-        component.Id.Returns(Guid.NewGuid().ToString());
+        component.Id.Returns(new ComponentId(Guid.NewGuid().ToString(), 1));
         return component;
     }
 
@@ -109,8 +109,8 @@ public class ComponentReRenderTests
             }
         }
         
-        public record DefineState2(string ComponentId, TestState NewState) : IAction<TestState>, IActionOnScopedState
-        {
+        public record DefineState2(ComponentId ComponentId, TestState NewState) : IAction<TestState>, IActionOnScopedState
+        {   
             public record Reducer(IStore Store) : IPureReducer<TestState, DefineState2>
             {
                 public TestState Reduce(TestState state, DefineState2 action) => action.NewState;
@@ -162,7 +162,7 @@ public class SubscriptionsTests
     private static IStateComponent CreateComponent()
     {
         var stateComponent = Substitute.For<IStateComponent>();
-        stateComponent.Id.Returns(Guid.NewGuid().ToString());
+        stateComponent.Id.Returns(new ComponentId(Guid.NewGuid().ToString(), 1));
         return stateComponent;
     }
 

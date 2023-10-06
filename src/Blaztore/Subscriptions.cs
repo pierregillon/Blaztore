@@ -33,7 +33,7 @@ public class Subscriptions
     {
         lock (_subscriptions)
         {
-            _subscriptions.RemoveAll(aRecord => aRecord.ComponentId == stateComponent.Id);
+            _subscriptions.RemoveAll(subscription => subscription.ComponentId == stateComponent.Id);
         }
     }
 
@@ -106,7 +106,7 @@ public class Subscriptions
     }
 
     private record Subscription(
-        string ComponentId,
+        ComponentId ComponentId,
         Type StateType,
         object StateScope,
         WeakReference<IStateComponent> ComponentReference
