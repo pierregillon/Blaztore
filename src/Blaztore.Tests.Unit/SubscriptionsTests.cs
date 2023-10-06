@@ -40,6 +40,22 @@ public class SubscriptionsTests
             .Received(1)
             .ReRender();
     }
+    
+    [Fact]
+    public void Do_not_re_render_component_that_has_been_removed()
+    {
+        var component = CreateComponent();
+        
+        _subscriptions.Add(typeof(TestState), DefaultScope.Value, component);
+
+        _subscriptions.Remove(component);
+        
+        _subscriptions.ReRenderSubscribers(typeof(TestState));
+        
+        component
+            .Received(0)
+            .ReRender();
+    }
 
     private static IStateComponent CreateComponent()
     {

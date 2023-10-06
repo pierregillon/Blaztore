@@ -1,4 +1,4 @@
-using Blaztore.Examples.Wasm.Components;
+using Blaztore.Examples.Wasm.Pages.TodoList.Components;
 using Blaztore.Examples.Wasm.Services;
 using Bunit;
 using FluentAssertions;

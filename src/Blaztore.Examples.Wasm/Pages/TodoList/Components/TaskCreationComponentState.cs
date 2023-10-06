@@ -1,7 +1,7 @@
 using Blaztore.ActionHandling;
 using Blaztore.Examples.Wasm.Services;
 
-namespace Blaztore.Examples.Wasm.Components;
+namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
 
 public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) : IState
 {

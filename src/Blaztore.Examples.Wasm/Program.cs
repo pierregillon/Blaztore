@@ -1,6 +1,6 @@
 using Blaztore;
 using Blaztore.Examples.Wasm;
-using Blaztore.Examples.Wasm.Components;
+using Blaztore.Examples.Wasm.Pages.TodoList.Components;
 using Blaztore.Examples.Wasm.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

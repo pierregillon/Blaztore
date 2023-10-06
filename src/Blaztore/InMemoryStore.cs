@@ -56,24 +56,4 @@ public class InMemoryStore : IStore
     }
 
     public void SetState<T>(T state) where T : IState => SetState(state, DefaultScope.Value);
-
-    public IReadOnlyCollection<T> GetAllStates<T>() where T : IState
-    {
-        lock (_states)
-        {
-            return _states.Values.Where(x => x is T).Cast<T>().ToList();
-        }
-    }
-
-    public void UpdateState<T>(T previousState, T newState) where T : IState
-    {
-        lock (_states)
-        {
-            var keyPair = _states.Single(x => Equals(x.Value, previousState));
-
-            _states.Remove(keyPair);
-
-            _states.Add((typeof(T), keyPair.Key.StateScope), newState);
-        }
-    }
 }

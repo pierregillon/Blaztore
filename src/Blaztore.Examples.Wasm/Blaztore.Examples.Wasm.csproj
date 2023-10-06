@@ -19,4 +19,9 @@
       <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\TodoList\Components\TaskCreationComponent.razor" />
+      <AdditionalFiles Include="Pages\TodoList\Components\TodoListComponent.razor" />
+    </ItemGroup>
+
 </Project>

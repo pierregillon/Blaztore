@@ -1,0 +1,54 @@
+@inherits Blaztore.Components.StateComponent<CounterComponentState>
+
+<div class="counter">
+    <span>
+        @State.CurrentTime.ToString("mm\\:ss\\:ff")
+    </span>
+    
+    <div class="actions">
+        @if (!State.IsStarted)
+        {
+            <button @onclick="_ => Dispatch(new CounterComponentState.Start(Id))">
+                Start
+            </button>
+        }
+        else
+        {
+            <button @onclick="_ => Dispatch(new CounterComponentState.Stop(Id))">
+                Stop
+            </button>
+        }
+                
+        <button @onclick="_ => Dispatch(new CounterComponentState.Reset(Id))">
+            Reset
+        </button>
+    </div>
+</div>
+
+<style>
+    .counter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        width: auto;
+        border: 1px solid black;
+        margin: 10px;
+        padding: 10px;
+    }
+    
+    .counter > span {
+        font-size: 18px;
+    }
+    
+    .actions{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+    }
+</style>
+
+@code {
+    private CounterComponentState State => GetState(Id);
+}
