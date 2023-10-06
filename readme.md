@@ -13,7 +13,7 @@ If you are not familiar with the Flux/Redux model, have a look on the following 
 
 You can find diagrams [**here**](docs/diagrams.md) to help you understand.
 
-## Goal
+## Goal 🎯
 
 Blazor does not contain a native Flux/Redux or MVU api internally.
 
@@ -25,7 +25,7 @@ This repository is largely inspired by the following existing repositories:
 
 If you are not satisfied by this library, don't hesitate to check them out, they are great.
 
-## Advantages
+## Advantages 💪
 
 Compared to the listed existing libraries, Blaztore has the following advantages:
 - ✅ Focused on **immutability** for every concepts (State, Action, ...)
@@ -35,13 +35,13 @@ It is highly extendable and allows you to easily implement **pipeline** or **pre
 - ✅ Use the **Flux/Redux** terminology and not a custom one.
 - ✅ Enable to store **multiple instances** of the same state type, identified by a unique id.
 
-## Installation
+## Installation 💻
 
 You can download the latest release NuGet packages from the official Blaztor nuget pages.
 
 - [Blaztore](https://www.nuget.org/packages/Blaztore) ![Nuget](https://img.shields.io/badge/dynamic/xml?color=blue&label=Nuget&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
 
-## Getting started
+## Getting started 🏁
 
 You can find below examples to illustrate how to implement concepts with **Blazstore**.
 
