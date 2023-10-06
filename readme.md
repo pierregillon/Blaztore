@@ -94,7 +94,7 @@ A pure reducer is a function that execute an action on a state, returning a new 
 Theoretically, it should not have any dependencies and generates no side effects.
 
 ```csharp
-public record TaskCreationStateReducer(IStore Store) 
+public record StartAddingNewTaskReducer(IStore Store) 
     : IPureReducer<TaskCreationState, StartAddingNewTask>
 {
     public TaskCreationState Reduce(TaskCreationState state, StartAddingNewTask action) =>
@@ -108,7 +108,7 @@ public record TaskCreationStateReducer(IStore Store)
 You can organize you reducers as you prefer: a reducer *for each* action or a *single* reducer for all your actions.
 
 ```csharp
-public record StartAddingNewTaskReducer(IStore Store) 
+public record TaskCreationStateReducer(IStore Store) 
     : IPureReducer<TaskCreationState, StartAddingNewTask>,
       IPureReducer<TaskCreationState, EndAddingNewTask>
 {
@@ -152,5 +152,9 @@ public record ExecuteTaskCreationEffect(
     }
 }
 ```
+To see full examples go [here](src/Blaztore.Examples.Wasm/Pages/TodoList/Components/TodoListComponentState.cs) or
+[here](src/Blaztore.Examples.Wasm/Pages/TodoList/Components/TaskCreationComponentState.cs).
 
-You can find more code on the [examples folder](/src/Blaztore.Examples.Wasm).
+## Examples
+
+You can find an example app in Blazor Wasm with Blaztor implementation [here](/src/Blaztore.Examples.Wasm).
