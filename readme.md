@@ -1,10 +1,8 @@
 # Blaztore
 
-![Status](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml/badge.svg)
-![Version](https://img.shields.io/badge/dynamic/xml?color=blue&label=version&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
+[![.NET](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml)
 
-
-Blaztore is a simple and easy to use Flux/Redux library for .NET Blazor.
+A simple and modest library to implement Flux/Redux pattern in .NET Blazor.
 
 ## Introduction
 
@@ -16,6 +14,6 @@ Blaztore is a simple and easy to use Flux/Redux library for .NET Blazor.
 
 You can download the latest release NuGet packages from the official Blaztor nuget pages.
 
-- Blaztore ![Nuget](https://img.shields.io/badge/Nuget-available%20-blue)
+- [Blaztore](https://www.nuget.org/packages/Blaztore) ![Nuget](https://img.shields.io/badge/dynamic/xml?color=blue&label=Nuget&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
 
 ## Release notes

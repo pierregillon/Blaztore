@@ -7,7 +7,7 @@
         <LangVersion>latest</LangVersion>
         <Version>1.0</Version>
         <Title>Crafty CQRS</Title>
-        <Description>A simple and modest library to implement Flux/Redux pattern in Blazore</Description>
+        <Description>A simple and modest library to implement Flux/Redux pattern in .NET Blazor</Description>
         <PackageTags>.net dotnet csharp blazor flux redux mediatr</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
