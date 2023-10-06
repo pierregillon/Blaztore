@@ -8,7 +8,7 @@
         <Version>1.0</Version>
         <Title>Crafty CQRS</Title>
         <Description>A simple and modest library to implement Flux/Redux pattern in .NET Blazor</Description>
-        <PackageTags>.net dotnet csharp blazor flux redux mediatr</PackageTags>
+        <PackageTags>.net dotnet csharp blazor flux redux mvu mediatr architecture</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/pierregillon/Blaztore</PackageProjectUrl>
