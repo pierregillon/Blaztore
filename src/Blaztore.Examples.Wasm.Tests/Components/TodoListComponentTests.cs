@@ -31,7 +31,7 @@ public class TodoListComponentTests : BUnitTest
         foreach (var todoListItem in _todoListItems)
         {
             component
-                .Find($"li:contains('{todoListItem.Description}')")
+                .Find($"*:contains('{todoListItem.Description}')")
                 .Should()
                 .NotBeNull();
         }
@@ -45,7 +45,7 @@ public class TodoListComponentTests : BUnitTest
         foreach (var todoListItem in _todoListItems)
         {
             component
-                .Find($"li:contains('{todoListItem.Description}') button:contains('Delete')")
+                .Find($"*:contains('{todoListItem.Description}') button:contains('Delete')")
                 .Should()
                 .NotBeNull();
         }
@@ -59,7 +59,7 @@ public class TodoListComponentTests : BUnitTest
         var firstItem = _todoListItems.First();
 
         component
-            .Find($"li:contains('{firstItem.Description}') button:contains('Delete')")
+            .Find($"*:contains('{firstItem.Description}') button:contains('Delete')")
             .Click();
 
         GetService<ITodoListApi>()
@@ -77,7 +77,7 @@ public class TodoListComponentTests : BUnitTest
         GetService<ITodoListApi>().ClearReceivedCalls();
 
         component
-            .Find($"li:contains('{firstItem.Description}') button:contains('Delete')")
+            .Find($"*:contains('{firstItem.Description}') button:contains('Delete')")
             .Click();
 
         GetService<ITodoListApi>()
@@ -93,7 +93,7 @@ public class TodoListComponentTests : BUnitTest
         foreach (var todoListItem in _todoListItems)
         {
             component
-                .Find($"li:contains('{todoListItem.Description}') input[type='checkbox']")
+                .Find($"*:contains('{todoListItem.Description}') input[type='checkbox']")
                 .Should()
                 .NotBeNull();
         }
@@ -107,7 +107,7 @@ public class TodoListComponentTests : BUnitTest
         var firstItem = _todoListItems.First();
 
         component
-            .Find($"li:contains('{firstItem.Description}') input[type='checkbox']")
+            .Find($"*:contains('{firstItem.Description}') input[type='checkbox']")
             .Input(true);
 
         GetService<ITodoListApi>()
@@ -123,7 +123,7 @@ public class TodoListComponentTests : BUnitTest
         var firstItem = _todoListItems.First();
 
         component
-            .Find($"li:contains('{firstItem.Description}') input[type='checkbox']")
+            .Find($"*:contains('{firstItem.Description}') input[type='checkbox']")
             .Input(false);
 
         GetService<ITodoListApi>()
