@@ -1,6 +1,6 @@
 namespace Blaztore;
 
-public class OnlyActiveComponentActionEventPublisher : IActionEventPublisher
+internal class OnlyActiveComponentActionEventPublisher : IActionEventPublisher
 {
     private readonly Subscriptions _subscriptions;
 

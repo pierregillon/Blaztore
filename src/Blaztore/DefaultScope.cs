@@ -1,6 +1,6 @@
 namespace Blaztore;
 
-public static class DefaultScope
+internal static class DefaultScope
 {
     public static readonly object Value = new();
 }

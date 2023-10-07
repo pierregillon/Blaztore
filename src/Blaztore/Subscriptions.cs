@@ -2,7 +2,7 @@ using Blaztore.Components;
 
 namespace Blaztore;
 
-public class Subscriptions
+internal class Subscriptions
 {
     private readonly List<Subscription> _subscriptions;
 
