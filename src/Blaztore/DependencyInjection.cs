@@ -14,6 +14,7 @@ public static class DependencyInjection
             .AddScoped<IActionDispatcher, MediatorActionDispatcher>()
             .AddScoped<IStore, InMemoryStore>()
             .AddScoped<Subscriptions>()
+            .AddScoped<IActionEventPublisher, OnlyActiveComponentActionEventPublisher>()
             ;
 
         return services;
