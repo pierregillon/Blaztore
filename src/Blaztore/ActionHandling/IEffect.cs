@@ -7,7 +7,7 @@ public interface IEffect<in TState, in TAction> : IRequestHandler<TAction>
     where TAction : IAction<TState>
 {
     Task IRequestHandler<TAction>.Handle(TAction action, CancellationToken _) =>
-        Effect(Store.GetState<TState>(), action);
+        Effect(action.GetState(Store), action);
 
     IStore Store { get; }
 
