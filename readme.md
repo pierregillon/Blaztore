@@ -158,3 +158,14 @@ To see full examples go [here](src/Blaztore.Examples.Wasm/Pages/TodoList/Compone
 ## Examples
 
 You can find an example app in Blazor Wasm with Blaztor implementation [here](/src/Blaztore.Examples.Wasm).
+
+## Release notes
+
+### v1.1.3: minor fixes
+- fix: missing dependency injection configuration for IActionEventDispatcher
+- fix: IEffect was retrieving wrong state (not scoped when action was scoped)
+
+### v1.1.n: minor fixes
+- doc: add readme and assets
+
+### v1: initial version
