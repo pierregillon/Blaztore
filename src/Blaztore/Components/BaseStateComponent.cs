@@ -12,7 +12,7 @@ public abstract class BaseStateComponent : ExtendedComponentBase, IStateComponen
         
         var count = InstanceCounts.AddOrUpdate(name, 1, (_, value) => value + 1);
 
-        Id = new ComponentId(name, count);
+        Id = ComponentId.FromNameAndNumber(name, count);
     }
     
     public ComponentId? Id { get; }

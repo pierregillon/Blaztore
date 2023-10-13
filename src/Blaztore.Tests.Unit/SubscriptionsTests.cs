@@ -60,7 +60,7 @@ public class SubscriptionsTests
     private static IStateComponent CreateComponent()
     {
         var stateComponent = Substitute.For<IStateComponent>();
-        stateComponent.Id.Returns(new ComponentId(Guid.NewGuid().ToString(), 1));
+        stateComponent.Id.Returns(ComponentId.New());
         return stateComponent;
     }
 

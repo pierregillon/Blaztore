@@ -93,7 +93,7 @@ public class ComponentReRenderingTests
     private static IStateComponent CreateStateComponent()
     {
         var component = Substitute.For<IStateComponent>();
-        component.Id.Returns(new ComponentId(Guid.NewGuid().ToString(), 1));
+        component.Id.Returns(ComponentId.New());
         return component;
     }
 
