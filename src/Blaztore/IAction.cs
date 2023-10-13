@@ -1,4 +1,3 @@
-using Blaztore.Components;
 using MediatR;
 
 namespace Blaztore;
@@ -30,17 +29,4 @@ public interface IAction<TState> : IAction where TState : IState
             store.SetState(newState);
         }
     }
-}
-
-public interface IActionOnScopedState : IAction
-{
-    object Scope { get; }
-}
-
-public interface IComponentAction<TState> : IAction<TState>, IActionOnScopedState
-    where TState : IState
-{
-    public ComponentId ComponentId { get; }
-    object IActionOnScopedState.Scope => ComponentId;
-
 }

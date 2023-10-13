@@ -5,19 +5,19 @@ namespace Blaztore;
 
 public class InMemoryStore : IStore
 {
-    private readonly IDictionary<(Type StateType, object StateScope), IState> _states =
-        new ConcurrentDictionary<(Type, object), IState>();
+    private readonly IDictionary<(Type StateType, object? StateScope), IState> _states =
+        new ConcurrentDictionary<(Type, object?), IState>();
 
     public T GetState<T>() where T : IState =>
         GetState<T>(DefaultScope.Value);
 
-    public T GetState<T>(object scope) where T : IState =>
+    public T GetState<T>(object? scope) where T : IState =>
         (T)GetState(typeof(T), scope);
 
     public object GetState(Type stateType) => 
         GetState(stateType, DefaultScope.Value);
 
-    public object GetState(Type stateType, object scope)
+    public object GetState(Type stateType, object? scope)
     {
         lock (_states)
         {
@@ -47,7 +47,7 @@ public class InMemoryStore : IStore
         return (IState)initializeMethod.Invoke(null, Array.Empty<object?>())!;
     }
 
-    public void SetState<T>(T state, object scope) where T : IState
+    public void SetState<T>(T state, object? scope) where T : IState
     {
         lock (_states)
         {

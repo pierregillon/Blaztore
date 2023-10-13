@@ -15,6 +15,6 @@ public abstract class BaseStateComponent : ExtendedComponentBase, IStateComponen
         Id = new ComponentId(name, count);
     }
     
-    public ComponentId Id { get; }
-    public void ReRender() => InvokeAsync(StateHasChanged);
+    public ComponentId? Id { get; }
+    public void ReRender() => _ = InvokeAsync(StateHasChanged);
 }

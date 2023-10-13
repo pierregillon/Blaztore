@@ -109,14 +109,14 @@ public class ComponentReRenderingTests
             }
         }
         
-        public record DefineState2(ComponentId ComponentId, TestState NewState) : IAction<TestState>, IActionOnScopedState
+        public record DefineState2(ComponentId? ComponentId, TestState NewState) : IAction<TestState>, IActionOnScopedState
         {   
             public record Reducer(IStore Store) : IPureReducer<TestState, DefineState2>
             {
                 public TestState Reduce(TestState state, DefineState2 action) => action.NewState;
             }
 
-            public object Scope => ComponentId;
+            public object? Scope => ComponentId;
         }
     }
 }

@@ -1,9 +1,11 @@
-@inherits Blaztore.Components.StateComponent<TaskCreationState>
+@using Blaztore.Components
+@using Blaztore.Gateways
+@inherits Blaztore.Components.BaseStateComponent
 
 @if (!State.IsAddingTask)
 {
     <button 
-        onclick="@(() => Dispatch(new TaskCreationState.StartAddingNewTask()))">
+        onclick="@(() => Gateway.Dispatch(new TaskCreationState.StartAddingNewTask()))">
         New task
     </button>
 }
@@ -12,19 +14,21 @@ else
     <div>
         <input
             value="@State.NewTaskDescription"
-            @oninput="@(args => Dispatch(new TaskCreationState.DefineNewDescription((string?)args.Value ?? string.Empty)))"/>
+            @oninput="@(args => Gateway.Dispatch(new TaskCreationState.DefineNewDescription((string?)args.Value ?? string.Empty)))"/>
 
         <button
             disabled="@(string.IsNullOrWhiteSpace(State.NewTaskDescription))"
-            @onclick="@(_ => Dispatch(new TaskCreationState.ExecuteTaskCreation()))">
+            @onclick="@(_ => Gateway.Dispatch(new TaskCreationState.ExecuteTaskCreation()))">
             Validate
         </button>
     </div>
 }
 
+@inject ISharedStateReduxGateway<TaskCreationState> Gateway
+
 @code {
-    private TaskCreationState State => GetState();
+    private TaskCreationState State => Gateway.SubscribeToState(this);
 
     protected override Task OnAfterInitialRenderAsync() =>
-        Dispatch(new TaskCreationState.Load());
+        Gateway.Dispatch(new TaskCreationState.Load());
 }

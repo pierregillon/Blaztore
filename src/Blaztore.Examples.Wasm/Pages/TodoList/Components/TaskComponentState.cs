@@ -7,9 +7,9 @@ public record TaskComponentState(bool IsDeleting) : IState
 {
     public static TaskComponentState Initialize() => new(false);
     
-    public record DeleteItem(Guid Id) : IAction<TaskComponentState>, IActionOnScopedState
+    public record DeleteItem(Guid Id) : IScopedAction<TaskComponentState, Guid>, IActionOnScopedState
     {
-        public object Scope => Id;
+        public object? Scope => Id;
         
         private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)
             : IEffect<TaskComponentState, DeleteItem>
@@ -26,7 +26,7 @@ public record TaskComponentState(bool IsDeleting) : IState
 
     public record StartDeleting(Guid Id) : IAction<TaskComponentState>, IActionOnScopedState
     {
-        public object Scope => Id;
+        public object? Scope => Id;
         
         private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, StartDeleting>
         {
@@ -40,7 +40,7 @@ public record TaskComponentState(bool IsDeleting) : IState
 
     public record EndDeleting(Guid Id) : IAction<TaskComponentState>, IActionOnScopedState
     {
-        public object Scope => Id;
+        public object? Scope => Id;
         
         private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, EndDeleting>
         {

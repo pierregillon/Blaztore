@@ -8,7 +8,7 @@ internal class Subscriptions
 
     public Subscriptions() => _subscriptions = new List<Subscription>();
 
-    public void Add(Type stateType, object stateScope, IStateComponent component)
+    public void Add(Type stateType, object? stateScope, IStateComponent component)
     {
         lock (_subscriptions)
         {
@@ -106,9 +106,9 @@ internal class Subscriptions
     }
 
     private record Subscription(
-        ComponentId ComponentId,
+        ComponentId? ComponentId,
         Type StateType,
-        object StateScope,
+        object? StateScope,
         WeakReference<IStateComponent> ComponentReference
     );
 }

@@ -1,13 +1,17 @@
-@inherits Blaztore.Components.StateComponent
+@using Blaztore.Components
+@using Blaztore.Gateways
+@inherits Blaztore.Components.BaseStateComponent
 
 @foreach (var task in State.TodoListItems)
 {
     <TaskComponent Task="task"></TaskComponent>
 }
 
+@inject ISharedStateReduxGateway<TodoListState> Gateway
+
 @code {
-    private TodoListState State => GetState<TodoListState>();
+    private TodoListState State => Gateway.SubscribeToState(this);
 
     protected override Task OnAfterInitialRenderAsync() =>
-        Dispatch(new TodoListState.Load());
+        Gateway.Dispatch(new TodoListState.Load());
 }

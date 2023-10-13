@@ -1,8 +1,9 @@
+using Blaztore.Gateways;
 using Microsoft.AspNetCore.Components;
 
 namespace Blaztore.Components;
 
-public class StateComponent : BaseStateComponent, IDisposable
+public abstract class StateComponent : BaseStateComponent, IDisposable
 {
     [Inject] private IActionDispatcher ActionDispatcher { get; set; } = default!;
     [Inject] private IStore Store { get; set; } = default!;
@@ -12,7 +13,7 @@ public class StateComponent : BaseStateComponent, IDisposable
 
     protected T GetState<T>() where T : IState => GetState<T>(DefaultScope.Value);
 
-    protected T GetState<T>(object scope) where T : IState
+    protected T GetState<T>(object? scope) where T : IState
     {
         var stateType = typeof(T);
         Subscriptions.Add(stateType, scope, this);
@@ -26,22 +27,14 @@ public class StateComponent : BaseStateComponent, IDisposable
     }
 }
 
-public class StateComponent<TState> : BaseStateComponent, IDisposable where TState : IState
+public abstract class StateComponent<TState> : BaseStateComponent, IDisposable where TState : IState
 {
-    [Inject] private IActionDispatcher ActionDispatcher { get; set; } = default!;
-    [Inject] private IStore Store { get; set; } = default!;
+    [Inject] private ISharedStateReduxGateway<TState> Gateway { get; set; } = default!;
     [Inject] private Subscriptions Subscriptions { get; set; } = default!;
 
-    protected Task Dispatch(IAction<TState> action) => ActionDispatcher.Dispatch(action);
+    protected Task Dispatch(IAction<TState> action) => Gateway.Dispatch(action);
 
-    protected TState GetState() => GetState(DefaultScope.Value);
-
-    protected TState GetState(object scope)
-    {
-        var stateType = typeof(TState);
-        Subscriptions.Add(stateType, scope, this);
-        return Store.GetState<TState>(scope);
-    }
+    protected TState GetState() => Gateway.SubscribeToState(this);
 
     public virtual void Dispose()
     {

@@ -1,4 +1,6 @@
-@inherits Blaztore.Components.StateComponent<CounterComponentState>
+@using Blaztore.Components
+@using Blaztore.Gateways
+@inherits BaseStateComponent
 
 <div class="counter">
     <span>
@@ -8,18 +10,18 @@
     <div class="actions">
         @if (!State.IsStarted)
         {
-            <button @onclick="_ => Dispatch(new CounterComponentState.Start(Id))">
+            <button @onclick="_ => Gateway.Dispatch(new CounterComponentState.Start(Id))">
                 Start
             </button>
         }
         else
         {
-            <button @onclick="_ => Dispatch(new CounterComponentState.Stop(Id))">
+            <button @onclick="_ => Gateway.Dispatch(new CounterComponentState.Stop(Id))">
                 Stop
             </button>
         }
                 
-        <button @onclick="_ => Dispatch(new CounterComponentState.Reset(Id))">
+        <button @onclick="_ => Gateway.Dispatch(new CounterComponentState.Reset(Id))">
             Reset
         </button>
     </div>
@@ -49,6 +51,8 @@
     }
 </style>
 
+@inject IUniqueStateReduxGateway<CounterComponentState> Gateway
+
 @code {
-    private CounterComponentState State => GetState(Id);
+    private CounterComponentState State => Gateway.SubscribeToState(this);
 }

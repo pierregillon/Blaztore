@@ -1,3 +1,5 @@
+using Blaztore.Components;
+using Blaztore.Gateways;
 using Blaztore.Pipelines;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,9 @@ public static class DependencyInjection
             .AddScoped<IStore, InMemoryStore>()
             .AddScoped<Subscriptions>()
             .AddScoped<IActionEventPublisher, OnlyActiveComponentActionEventPublisher>()
+            .AddScoped(typeof(ISharedStateReduxGateway<>), typeof(ReduxGateway<>))
+            .AddScoped(typeof(IScopedStateReduxGateway<,>), typeof(ReduxGateway<,>))
+            .AddScoped(typeof(IUniqueStateReduxGateway<>), typeof(ReduxGateway<>))
             ;
 
         return services;

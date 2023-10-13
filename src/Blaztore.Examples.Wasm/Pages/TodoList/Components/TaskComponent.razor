@@ -1,18 +1,20 @@
 @using Blaztore.Examples.Wasm.Services
-@inherits Blaztore.Components.StateComponent
+@using Blaztore.Components
+@using Blaztore.Gateways
+@inherits BaseStateComponent
 
 <div class="task">
     <input
         type="checkbox"
         value="@Task.IsDone"
-        @oninput="@(args => Dispatch(new TodoListState.ToggleIsDone(Task.Id, (bool?)args.Value ?? false)))"/>
+        @oninput="@(args => GlobalGateway.Dispatch(new TodoListState.ToggleIsDone(Task.Id, (bool?)args.Value ?? false)))"/>
     
     <span class="@(Task.IsDone ? "line-through" : string.Empty)">
         @Task.Description
     </span>
     
     <button
-        @onclick="@(_ => Dispatch(new TaskComponentState.DeleteItem(Task.Id)))"
+        @onclick="@(_ => Gateway.Dispatch(new TaskComponentState.DeleteItem(Task.Id)))"
         disabled="@State.IsDeleting">
         @if (State.IsDeleting)
         {
@@ -46,10 +48,13 @@
     }
 </style>
 
-@code {
+@inject IScopedStateReduxGateway<TaskComponentState, Guid> Gateway
+@inject ISharedStateReduxGateway<TodoListState> GlobalGateway
 
+@code {
     [Parameter]
     public TaskListItem Task { get; set; } = default!;
 
-    private TaskComponentState State => GetState<TaskComponentState>(Task.Id);
+    private TaskComponentState State => Gateway.SubscribeToState(this, Task.Id);
+
 }
