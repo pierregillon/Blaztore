@@ -7,6 +7,8 @@
     <TaskComponent Task="task"></TaskComponent>
 }
 
+@implements IDisposable
+
 @inject IGlobalStateReduxGateway<TodoListState> Gateway
 
 @code {
@@ -14,4 +16,7 @@
 
     protected override Task OnAfterInitialRenderAsync() =>
         Gateway.Dispatch(new TodoListState.Load());
+
+    public void Dispose() => Gateway.UnsubscribeFromState(this);
+
 }

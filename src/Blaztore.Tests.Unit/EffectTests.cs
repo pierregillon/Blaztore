@@ -1,41 +1,45 @@
 using Blaztore.ActionHandling;
+using Blaztore.Components;
+using Blaztore.Gateways;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 
 namespace Blaztore.Tests.Unit;
 
 public class EffectTests
 {
-    private readonly IActionDispatcher _actionDispatcher;
-    private readonly ServiceProvider _serviceProvider;
+    private readonly IScopedStateReduxGateway<TestState,object> _gateway;
+    private readonly Repository _repository;
 
     public EffectTests()
     {
-        _serviceProvider = new ServiceCollection()
-            .AddBlaztore(x => x.RegisterServicesFromAssemblyContaining<TestState>())
+        var serviceProvider = new ServiceCollection()
+            .AddBlaztore(x => x with
+            {
+                ConfigureMediator = m => m.RegisterServicesFromAssemblyContaining<TestState>()
+            })
             .AddSingleton<Repository>()
             .BuildServiceProvider();
 
-        _actionDispatcher = _serviceProvider.GetRequiredService<IActionDispatcher>();
+        _gateway = serviceProvider.GetRequiredService<IScopedStateReduxGateway<TestState, object>>();
+        _repository = serviceProvider.GetRequiredService<Repository>();
     }
 
     [Fact]
     public void An_effect_use_correct_scoped_state()
     {
         var scope = Guid.NewGuid();
+
+        _gateway.SubscribeToState(Substitute.For<IStateComponent>(), scope);
         
-        _actionDispatcher.Dispatch(new TestState.SetStateValue(scope, "state value"));
-        _actionDispatcher.Dispatch(new TestState.SetInRepo(scope, "action value"));
+        _gateway.Dispatch(new TestState.SetStateValue(scope, "state value"));
+        _gateway.Dispatch(new TestState.SetInRepo(scope, "action value"));
 
-        _serviceProvider.GetRequiredService<Repository>()
-            .GetActionValue()
+        _repository
+            .GetValue()
             .Should()
-            .Be("action value");
-
-        _serviceProvider.GetRequiredService<Repository>()
-            .GetStateValue()
-            .Should()
-            .Be("state value");
+            .Be(new RepositoryValue("state value", "action value"));
     }
     
     public record TestState(string Value) : IScopedState<object>
@@ -78,7 +82,8 @@ public class EffectTests
             _actionValue = actionValue;
         }
 
-        public string? GetActionValue() => _actionValue;
-        public string? GetStateValue() => _stateValue;
+        public RepositoryValue GetValue() => new(_stateValue, _actionValue);
     }
+
+    public record RepositoryValue(string? StateValue, string? ActionValue);
 }

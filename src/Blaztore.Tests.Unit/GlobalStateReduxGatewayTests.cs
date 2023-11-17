@@ -1,59 +1,61 @@
-using Blaztore.ActionHandling;
-using Blaztore.Components;
 using Blaztore.Gateways;
+using Blaztore.Tests.Unit.States;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 
 namespace Blaztore.Tests.Unit;
 
 public class GlobalStateReduxGatewayTests
 {
-    private readonly IGlobalStateReduxGateway<TestState> _gateway ;
+    private readonly IGlobalStateReduxGateway<TestGlobalState> _gateway ;
     private readonly IStore _store;
-    private readonly IActionDispatcher _dispatcher;
 
     public GlobalStateReduxGatewayTests()
     {
         var serviceProvider = new ServiceCollection()
-            .AddBlaztore(x => x.RegisterServicesFromAssemblyContaining<TestState>())
+            .AddBlaztore(x => x with
+            {
+                ConfigureMediator = configuration => configuration.RegisterServicesFromAssemblyContaining<TestGlobalState>()
+            })
             .BuildServiceProvider();
         
-        _gateway = serviceProvider.GetRequiredService<IGlobalStateReduxGateway<TestState>>();
+        _gateway = serviceProvider.GetRequiredService<IGlobalStateReduxGateway<TestGlobalState>>();
         _store = serviceProvider.GetRequiredService<IStore>();
-        _dispatcher = serviceProvider.GetRequiredService<IActionDispatcher>();
     }
     
     [Fact]
-    public void Subscribing_to_global_state_stores_global_state()
+    public void Subscribing_to_global_state_stores_a_state_globally()
     {
-        var component = CreateComponent();
-
-        _gateway.SubscribeToState(component)
-            .Should()
-            .BeSameAs(_store.GetState<TestState>());
-    }
-
-    private static IStateComponent CreateComponent()
-    {
-        var component = Substitute.For<IStateComponent>();
-
-        component.Id.Returns(new ComponentId(Guid.NewGuid().ToString()));
+        var state1 = _gateway.SubscribeToState(Components.SomeComponent);
+        var state2 = _store.GetState<TestGlobalState>();
         
-        return component;
+        state1
+            .Should()
+            .BeSameAs(state2);
     }
-
-    public record TestState(bool IsLoaded) : IGlobalState
+    
+    [Fact]
+    public void Does_not_execute_action_when_no_component_has_subscribed_to_state()
     {
-        public static TestState Initialize() => new(false);
+        _gateway.Dispatch(new TestGlobalState.DefineState(new TestGlobalState("my value")));
 
-        public record Load : IAction<TestState>
-        {
-            internal record Reducer(IStore Store) : IPureReducer<TestState, Load>
-            {
-                public TestState Reduce(TestState state, Load action) =>
-                    state with { IsLoaded = true };
-            }
-        }
+        var state = _store.GetState<TestGlobalState>();
+
+        state.Should().BeNull();
+    }
+    
+    [Fact]
+    public void Does_not_execute_action_when_component_unsubscribed()
+    {
+        var stateComponent = Components.SomeComponent;
+        
+        _gateway.SubscribeToState(stateComponent);
+        _gateway.UnsubscribeFromState(stateComponent);
+        
+        _gateway.Dispatch(new TestGlobalState.DefineState(new TestGlobalState("my value")));
+
+        var state = _store.GetState<TestGlobalState>();
+
+        state.Should().BeNull();
     }
 }

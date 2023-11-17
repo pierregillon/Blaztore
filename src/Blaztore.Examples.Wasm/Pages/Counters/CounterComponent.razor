@@ -51,8 +51,15 @@
     }
 </style>
 
+@implements IDisposable;
+
 @inject IComponentStateReduxGateway<CounterComponentState> Gateway
 
 @code {
     private CounterComponentState State => Gateway.SubscribeToState(this);
+
+    public void Dispose()
+    {
+        Gateway.UnsubscribeFromState(this);
+    }
 }

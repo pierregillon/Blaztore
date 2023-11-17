@@ -35,6 +35,14 @@ internal class Subscriptions
         }
     }
 
+    public bool NoMoreSubscribers(Type stateType, object? stateScope)
+    {
+        lock (_subscriptions)
+        {
+            return !_subscriptions.Any(x => x.StateType == stateType && x.StateScope == stateScope);
+        }
+    }
+
     public void ReRenderSubscribers(Type stateType)
     {
         Subscription[] subscriptions;

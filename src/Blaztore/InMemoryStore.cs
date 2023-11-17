@@ -5,47 +5,63 @@ namespace Blaztore;
 
 public class InMemoryStore : IStore
 {
-    private readonly IDictionary<(Type StateType, object? StateScope), IState> _states =
+    private readonly BlaztoreConfiguration _configuration;
+
+    private readonly IDictionary<(Type StateType, object? Key), IState> _states =
         new ConcurrentDictionary<(Type, object?), IState>();
 
-    public T GetStateOrCreateDefault<T>(object? scope) where T : IState
+    public InMemoryStore(BlaztoreConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public bool CreateStateFromActionExecution => !_configuration.DisableActionExecutionWhenNoComponentSubscribed;
+
+    public T? GetState<T>(object? key) where T : IState =>
+        (T?)GetState(typeof(T), key);
+
+    public IState? GetState(Type stateType, object? key)
+    {
+        lock (_states)
+        {
+            return _states.TryGetValue((stateType, key), out var state) 
+                ? state 
+                : null;
+        }
+    }
+
+    public T GetStateOrCreateDefault<T>(object? key) where T : IState
     {
         var stateType = typeof(T);
         
         lock (_states)
         {
-            if (_states.TryGetValue((stateType, scope), out var state))
+            if (_states.TryGetValue((stateType, key), out var state))
             {
                 return (T)state;
             }
 
             state = CreateDefaultState(stateType);
             
-            _states.Add((stateType, scope), state);
+            _states.Add((stateType, key), state);
 
             return (T)state;
         }
     }
 
-    public T GetStateOrCreateDefault<T>() where T : IState =>
-        GetStateOrCreateDefault<T>(DefaultScope.Value);
-
-    public T? GetState<T>() where T : IState =>
-        GetState<T>(DefaultScope.Value);
-
-    public T? GetState<T>(object? scope) where T : IState =>
-        (T?)GetState(typeof(T), scope);
-
-    public IState? GetState(Type stateType) => 
-        GetState(stateType, DefaultScope.Value);
-
-    public IState? GetState(Type stateType, object? scope)
+    public void Remove<TState>(object? key) where TState : IState
     {
         lock (_states)
         {
-            return _states.TryGetValue((stateType, scope), out var state) 
-                ? state 
-                : null;
+            _states.Remove((typeof(TState), key));
+        }
+    }
+
+    public void SetState<T>(T state, object? key) where T : IState
+    {
+        lock (_states)
+        {
+            _states[(typeof(T), key)] = state;
         }
     }
 
@@ -61,14 +77,4 @@ public class InMemoryStore : IStore
 
         return (IState)initializeMethod.Invoke(null, Array.Empty<object?>())!;
     }
-
-    public void SetState<T>(T state, object? scope) where T : IState
-    {
-        lock (_states)
-        {
-            _states[(typeof(T), scope)] = state;
-        }
-    }
-
-    public void SetState<T>(T state) where T : IState => SetState(state, DefaultScope.Value);
 }

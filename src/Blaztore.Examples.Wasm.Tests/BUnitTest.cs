@@ -11,7 +11,10 @@ public abstract class BUnitTest : TestContext
     protected BUnitTest()
     {
         Services
-            .AddBlaztore(x => x.RegisterServicesFromAssemblyContaining<TodoListComponent>())
+            .AddBlaztore(x => x with
+            {
+                ConfigureMediator = c => c.RegisterServicesFromAssemblyContaining<TodoListComponent>()
+            })
             .AddScoped<ITodoListApi>(_ => Substitute.For<ITodoListApi>());
     }
 

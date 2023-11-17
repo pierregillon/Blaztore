@@ -7,10 +7,18 @@ namespace Blaztore;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddBlaztore(this IServiceCollection services, Action<MediatRServiceConfiguration> mediatorConfiguration)
+    public static IServiceCollection AddBlaztore(this IServiceCollection services, Func<BlaztoreConfiguration, BlaztoreConfiguration> configure)
     {
+        var defaultConfiguration = new BlaztoreConfiguration(
+            _ => {}, 
+            DisableActionExecutionWhenNoComponentSubscribed: true
+        );
+        
+        defaultConfiguration = configure(defaultConfiguration);
+        
         services
-            .AddMediatR(mediatorConfiguration)
+            .AddMediatR(defaultConfiguration.ConfigureMediator)
+            .AddScoped<BlaztoreConfiguration>(_ => defaultConfiguration)
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(RenderSubscriptionsPipeline<,>))
             .AddScoped<IActionDispatcher, MediatorActionDispatcher>()
             .AddScoped<IStore, InMemoryStore>()
@@ -24,3 +32,8 @@ public static class DependencyInjection
         return services;
     }
 }
+
+public record BlaztoreConfiguration(
+    Action<MediatRServiceConfiguration> ConfigureMediator, 
+    bool DisableActionExecutionWhenNoComponentSubscribed
+);

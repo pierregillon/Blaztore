@@ -1,5 +1,7 @@
 using Blaztore.ActionHandling;
 using Blaztore.Components;
+using Blaztore.Gateways;
+using Blaztore.Tests.Unit.States;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -7,31 +9,30 @@ namespace Blaztore.Tests.Unit;
 
 public class ComponentReRenderingTests
 {
-    private readonly IStore _store;
-    private readonly Subscriptions _subscriptions;
-    private readonly IActionDispatcher _actionDispatcher;
+    private readonly IGlobalStateReduxGateway<TestGlobalState> _gateway;
+    private readonly IComponentStateReduxGateway<TestComponentState> _componentGateway;
 
     public ComponentReRenderingTests()
     {
         var serviceProvider = new ServiceCollection()
-            .AddBlaztore(x => x.RegisterServicesFromAssemblyContaining<TestState>())
+            .AddBlaztore(x => x with
+            {
+                ConfigureMediator = m => m.RegisterServicesFromAssemblyContaining<TestComponentState>()
+            })
             .BuildServiceProvider();
 
-        _store = serviceProvider.GetRequiredService<IStore>();
-        _subscriptions = serviceProvider.GetRequiredService<Subscriptions>();
-        _actionDispatcher = serviceProvider.GetRequiredService<IActionDispatcher>();
+        _gateway = serviceProvider.GetRequiredService<IGlobalStateReduxGateway<TestGlobalState>>();
+        _componentGateway = serviceProvider.GetRequiredService<IComponentStateReduxGateway<TestComponentState>>();
     }
     
     [Fact]
     public void Dispatching_an_action_that_does_not_change_state_does_not_re_render_subscribed_components()
     {
         var stateComponent = Substitute.For<IStateComponent>();
+
+        var initialState = _gateway.SubscribeToState(stateComponent);
         
-        _subscriptions.Add(typeof(TestState), DefaultScope.Value, stateComponent);
-
-        var state = _store.GetStateOrCreateDefault<TestState>();
-
-        _actionDispatcher.Dispatch(new TestState.DefineState(state));
+        _gateway.Dispatch(new TestGlobalState.DefineState(initialState));
         
         stateComponent
             .Received(0)
@@ -45,12 +46,12 @@ public class ComponentReRenderingTests
 
         foreach (var stateComponent in stateComponents)
         {
-            _subscriptions.Add(typeof(TestState), DefaultScope.Value, stateComponent);
+            _gateway.SubscribeToState(stateComponent);
         }
 
-        var newState = new TestState("hello world");
+        var newState = new TestGlobalState("hello world");
         
-        _actionDispatcher.Dispatch(new TestState.DefineState(newState));
+        _gateway.Dispatch(new TestGlobalState.DefineState(newState));
 
         foreach (var stateComponent in stateComponents)
         {
@@ -66,12 +67,12 @@ public class ComponentReRenderingTests
         var stateComponent1 = CreateStateComponent();
         var stateComponent2 = CreateStateComponent();
 
-        _subscriptions.Add(typeof(TestState), stateComponent1.Id, stateComponent1);
-        _subscriptions.Add(typeof(TestState), stateComponent2.Id, stateComponent2);
+        _componentGateway.SubscribeToState(stateComponent1);
+        _componentGateway.SubscribeToState(stateComponent2);
 
-        var newState = new TestState("hello world");
+        var newState = new TestComponentState("hello world");
         
-        _actionDispatcher.Dispatch(new TestState.DefineState2(stateComponent1.Id, newState));
+        _componentGateway.Dispatch(new TestComponentState.DefineState(stateComponent1.Id, newState));
 
         stateComponent1
             .Received(1)
@@ -95,28 +96,5 @@ public class ComponentReRenderingTests
         var component = Substitute.For<IStateComponent>();
         component.Id.Returns(ComponentId.New());
         return component;
-    }
-
-    public record TestState(string Value) : IComponentState
-    {
-        public static TestState Initialize() => new(string.Empty);
-
-        public record DefineState(TestState NewState) : IAction<TestState>
-        {
-            public record Reducer(IStore Store) : IPureReducer<TestState, DefineState>
-            {
-                public TestState Reduce(TestState state, DefineState action) => action.NewState;
-            }
-        }
-        
-        public record DefineState2(ComponentId ComponentId, TestState NewState) : IComponentAction<TestState>
-        {   
-            public record Reducer(IStore Store) : IPureReducer<TestState, DefineState2>
-            {
-                public TestState Reduce(TestState state, DefineState2 action) => action.NewState;
-            }
-
-            public object Scope => ComponentId;
-        }
     }
 }

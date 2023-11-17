@@ -13,7 +13,10 @@ public interface IReducer<TState, in TAction> : IRequestHandler<TAction>
     async Task IRequestHandler<TAction>.Handle(TAction action, CancellationToken _)
     {
         var initialState = action.GetState(Store);
-        var newState = await Reduce(initialState, action);
-        action.SetState(Store, newState);
+        if (initialState is not null)
+        {
+            var newState = await Reduce(initialState, action);
+            action.SetState(Store, newState);
+        }
     }
 }

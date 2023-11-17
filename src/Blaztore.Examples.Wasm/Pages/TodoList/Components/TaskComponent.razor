@@ -48,6 +48,8 @@
     }
 </style>
 
+@implements IDisposable;
+
 @inject IScopedStateReduxGateway<TaskComponentState, Guid> Gateway
 @inject IGlobalStateReduxGateway<TodoListState> GlobalGateway
 
@@ -56,5 +58,11 @@
     public TaskListItem Task { get; set; } = default!;
 
     private TaskComponentState State => Gateway.SubscribeToState(this, Task.Id);
+
+    public void Dispose()
+    {
+        Gateway.UnsubscribeFromState(this, Task.Id);
+        GlobalGateway.UnsubscribeFromState(this);
+    }
 
 }

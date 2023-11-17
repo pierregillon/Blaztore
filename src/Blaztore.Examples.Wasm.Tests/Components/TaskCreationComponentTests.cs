@@ -108,6 +108,7 @@ public class TaskCreationComponentTests : BUnitTest
     [Fact]
     public void Creating_new_task_reload_list()
     {
+        _ = RenderComponent<TodoListComponent>();
         var component = RenderComponent<TaskCreationComponent>();
 
         GetService<ITodoListApi>().ClearReceivedCalls();

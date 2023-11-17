@@ -6,4 +6,5 @@ public interface IComponentStateReduxGateway<TState> where TState : IComponentSt
 {
     TState SubscribeToState(IStateComponent stateComponent);
     Task Dispatch(IComponentAction<TState> action);
+    void UnsubscribeFromState(IStateComponent stateComponent);
 }

@@ -24,6 +24,8 @@ else
     </div>
 }
 
+@implements IDisposable
+
 @inject IGlobalStateReduxGateway<TaskCreationState> Gateway
 
 @code {
@@ -31,4 +33,6 @@ else
 
     protected override Task OnAfterInitialRenderAsync() =>
         Gateway.Dispatch(new TaskCreationState.Load());
+
+    public void Dispose() => Gateway.UnsubscribeFromState(this);
 }

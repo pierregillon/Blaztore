@@ -9,7 +9,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
 
     public record Start(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
-        internal record Effector(IStore Store, IActionDispatcher ActionDispatcher) : IPureReducer<CounterComponentState, Start>
+        internal record Reducer(IStore Store, IActionDispatcher ActionDispatcher) : IPureReducer<CounterComponentState, Start>
         {
             public CounterComponentState Reduce(CounterComponentState state, Start action)
             {
@@ -26,7 +26,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
 
     public record Count(ComponentId ComponentId, int Milliseconds) : IComponentAction<CounterComponentState>
     {
-        internal record Effector(IStore Store) : IPureReducer<CounterComponentState, Count>
+        internal record Reducer(IStore Store) : IPureReducer<CounterComponentState, Count>
         {
             public CounterComponentState Reduce(CounterComponentState state, Count action) =>
                 state with
@@ -38,7 +38,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
 
     public record Stop(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
-        internal record Effector(IStore Store) : IPureReducerNoAction<CounterComponentState, Stop>
+        internal record Reducer(IStore Store) : IPureReducerNoAction<CounterComponentState, Stop>
         {
             public CounterComponentState Reduce(CounterComponentState state)
             {
@@ -55,7 +55,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
     
     public record Reset(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
-        internal record Effector(IStore Store) : IPureReducerNoAction<CounterComponentState, Reset>
+        internal record Reducer(IStore Store) : IPureReducerNoAction<CounterComponentState, Reset>
         {
             public CounterComponentState Reduce(CounterComponentState state)
             {
