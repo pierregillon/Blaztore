@@ -5,11 +5,11 @@ namespace Blaztore.Tests.Unit;
 
 public static class Components
 {
-    public static readonly IStateComponent SomeComponent = CreateComponent();
+    public static readonly IComponentBase SomeComponent = CreateComponent();
     
-    public static IStateComponent CreateComponent()
+    public static IComponentBase CreateComponent()
     {
-        var component = Substitute.For<IStateComponent>();
+        var component = Substitute.For<IComponentBase>();
 
         component.Id.Returns(new ComponentId(Guid.NewGuid().ToString()));
         

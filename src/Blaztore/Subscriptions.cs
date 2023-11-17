@@ -6,7 +6,7 @@ internal class Subscriptions
 {
     private readonly List<Subscription> _subscriptions = new();
 
-    public void Add(Type stateType, object? stateScope, IStateComponent component)
+    public void Add(Type stateType, object? stateScope, IComponentBase component)
     {
         lock (_subscriptions)
         {
@@ -19,7 +19,7 @@ internal class Subscriptions
                     component.Id,
                     stateType,
                     stateScope,
-                    new WeakReference<IStateComponent>(component)
+                    new WeakReference<IComponentBase>(component)
                 );
 
                 _subscriptions.Add(subscription);
@@ -27,7 +27,7 @@ internal class Subscriptions
         }
     }
 
-    public void Remove(IStateComponent stateComponent)
+    public void Remove(IComponentBase stateComponent)
     {
         lock (_subscriptions)
         {
@@ -90,7 +90,7 @@ internal class Subscriptions
         }
     }
 
-    public async Task ExecuteOnSubscribedComponents<TState>(Func<IStateComponent, Task> action)
+    public async Task ExecuteOnSubscribedComponents<TState>(Func<IComponentBase, Task> action)
         where TState : IState
     {
         List<Subscription> subscriptions;
@@ -115,6 +115,6 @@ internal class Subscriptions
         ComponentId ComponentId,
         Type StateType,
         object? StateScope,
-        WeakReference<IStateComponent> ComponentReference
+        WeakReference<IComponentBase> ComponentReference
     );
 }

@@ -52,9 +52,9 @@ public class SubscriptionsTests
             .ReRender();
     }
 
-    private static IStateComponent CreateComponent()
+    private static IComponentBase CreateComponent()
     {
-        var stateComponent = Substitute.For<IStateComponent>();
+        var stateComponent = Substitute.For<IComponentBase>();
         stateComponent.Id.Returns(ComponentId.New());
         return stateComponent;
     }

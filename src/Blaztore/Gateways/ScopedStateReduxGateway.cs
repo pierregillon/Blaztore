@@ -16,7 +16,7 @@ internal class ScopedStateReduxGateway<TState, TScope> : IScopedStateReduxGatewa
         _subscriptions = subscriptions;
     }
 
-    public TState SubscribeToState(IStateComponent component, TScope? scope)
+    public TState SubscribeToState(IComponentBase component, TScope? scope)
     {
         _subscriptions.Add(typeof(TState), scope, component);
         
@@ -24,7 +24,7 @@ internal class ScopedStateReduxGateway<TState, TScope> : IScopedStateReduxGatewa
     }
 
     public Task Dispatch(IScopedAction<TState, TScope> action) => _actionDispatcher.Dispatch(action);
-    public void UnsubscribeFromState(IStateComponent stateComponent, TScope? scope)
+    public void UnsubscribeFromState(IComponentBase stateComponent, TScope? scope)
     {
         _subscriptions.Remove(stateComponent);
 

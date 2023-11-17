@@ -102,9 +102,9 @@ public class ComponentStateReduxGatewayTests
         state.Should().BeNull();
     }
 
-    private static IStateComponent CreateComponent()
+    private static IComponentBase CreateComponent()
     {
-        var component = Substitute.For<IStateComponent>();
+        var component = Substitute.For<IComponentBase>();
 
         component.Id.Returns(new ComponentId(Guid.NewGuid().ToString()));
         

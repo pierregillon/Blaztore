@@ -1,22 +1,15 @@
 @using Blaztore.Components
 @using Blaztore.Gateways
-@inherits Blaztore.Components.BaseStateComponent
+@inherits Blaztore.Components.BlaztoreComponentBase<TodoListState>
 
 @foreach (var task in State.TodoListItems)
 {
     <TaskComponent Task="task"></TaskComponent>
 }
 
-@implements IDisposable
-
 @inject IGlobalStateReduxGateway<TodoListState> Gateway
 
 @code {
-    private TodoListState State => Gateway.SubscribeToState(this);
-
     protected override Task OnAfterInitialRenderAsync() =>
-        Gateway.Dispatch(new TodoListState.Load());
-
-    public void Dispose() => Gateway.UnsubscribeFromState(this);
-
+        Dispatch(new TodoListState.Load());
 }

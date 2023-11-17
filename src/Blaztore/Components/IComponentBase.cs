@@ -1,7 +1,7 @@
 namespace Blaztore.Components;
 
-public interface IStateComponent
+public interface IComponentBase
 {
-    void ReRender();
     ComponentId Id { get; }
+    void ReRender();
 }

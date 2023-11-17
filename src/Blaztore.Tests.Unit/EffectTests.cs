@@ -31,7 +31,7 @@ public class EffectTests
     {
         var scope = Guid.NewGuid();
 
-        _gateway.SubscribeToState(Substitute.For<IStateComponent>(), scope);
+        _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope);
         
         _gateway.Dispatch(new TestState.SetStateValue(scope, "state value"));
         _gateway.Dispatch(new TestState.SetInRepo(scope, "action value"));

@@ -31,7 +31,7 @@ public class PureReducerTests
     {
         var scope = Guid.NewGuid();
 
-        _gateway.SubscribeToState(Substitute.For<IStateComponent>(), scope);
+        _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope);
         
         _gateway.Dispatch(new ConcatState.Concat(scope, "Test"));
         _gateway.Dispatch(new ConcatState.Concat(scope, "Test1"));
@@ -45,11 +45,11 @@ public class PureReducerTests
     public void Reducing_does_not_update_state_with_other_scope()
     {
         var scope1 = Guid.NewGuid();
-        _gateway.SubscribeToState(Substitute.For<IStateComponent>(), scope1);
+        _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope1);
         _gateway.Dispatch(new ConcatState.Concat(scope1, "Test1"));
         
         var scope2 = Guid.NewGuid();
-        _gateway.SubscribeToState(Substitute.For<IStateComponent>(), scope2);
+        _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope2);
         _gateway.Dispatch(new ConcatState.Concat(scope2, "Test2"));
         
         var state1 = _store.GetState<ConcatState>(scope1);

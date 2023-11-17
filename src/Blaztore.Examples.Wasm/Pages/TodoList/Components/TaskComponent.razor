@@ -1,7 +1,8 @@
 @using Blaztore.Examples.Wasm.Services
 @using Blaztore.Components
 @using Blaztore.Gateways
-@inherits BaseStateComponent
+
+@inherits BlaztoreComponentBaseWithScopedState<TaskComponentState, Guid>
 
 <div class="task">
     <input
@@ -14,7 +15,7 @@
     </span>
     
     <button
-        @onclick="@(_ => Gateway.Dispatch(new TaskComponentState.DeleteItem(Task.Id)))"
+        @onclick="@(_ => Dispatch(new TaskComponentState.DeleteItem(Task.Id)))"
         disabled="@State.IsDeleting">
         @if (State.IsDeleting)
         {
@@ -48,21 +49,18 @@
     }
 </style>
 
-@implements IDisposable;
-
-@inject IScopedStateReduxGateway<TaskComponentState, Guid> Gateway
 @inject IGlobalStateReduxGateway<TodoListState> GlobalGateway
 
 @code {
     [Parameter]
     public TaskListItem Task { get; set; } = default!;
 
-    private TaskComponentState State => Gateway.SubscribeToState(this, Task.Id);
+    protected override Guid Scope => Task.Id;
 
-    public void Dispose()
+    public override void Dispose()
     {
-        Gateway.UnsubscribeFromState(this, Task.Id);
+        base.Dispose();
+        
         GlobalGateway.UnsubscribeFromState(this);
     }
-
 }

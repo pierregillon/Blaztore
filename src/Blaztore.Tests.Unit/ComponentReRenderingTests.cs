@@ -28,7 +28,7 @@ public class ComponentReRenderingTests
     [Fact]
     public void Dispatching_an_action_that_does_not_change_state_does_not_re_render_subscribed_components()
     {
-        var stateComponent = Substitute.For<IStateComponent>();
+        var stateComponent = Substitute.For<IComponentBase>();
 
         var initialState = _gateway.SubscribeToState(stateComponent);
         
@@ -83,7 +83,7 @@ public class ComponentReRenderingTests
             .ReRender();
     }
 
-    private static IEnumerable<IStateComponent> CreateStateComponents()
+    private static IEnumerable<IComponentBase> CreateStateComponents()
     {
         for (var i = 0; i < new Random((int)DateTime.Now.Ticks).Next(20); i++)
         {
@@ -91,9 +91,9 @@ public class ComponentReRenderingTests
         }
     }
 
-    private static IStateComponent CreateStateComponent()
+    private static IComponentBase CreateStateComponent()
     {
-        var component = Substitute.For<IStateComponent>();
+        var component = Substitute.For<IComponentBase>();
         component.Id.Returns(ComponentId.New());
         return component;
     }
