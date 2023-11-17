@@ -2,7 +2,7 @@ namespace Blaztore;
 
 public interface IStore
 {
-    bool CreateStateFromActionExecution { get; }
+    bool CanInitializeStateFromActionExecution { get; }
 
     T? GetState<T>(object? key) where T : IState;
     internal IState? GetState(Type stateType, object? key);

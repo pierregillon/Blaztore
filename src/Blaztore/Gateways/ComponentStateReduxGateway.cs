@@ -18,7 +18,7 @@ internal class ComponentStateReduxGateway<TState> : IComponentStateReduxGateway<
 
     public TState SubscribeToState(IComponentBase component)
     {
-        _subscriptions.Add(typeof(TState), component.Id, component);
+        _subscriptions.Add(component, typeof(TState), component.Id);
         
         return _store.GetStateOrCreateDefault<TState>(component.Id);
     }

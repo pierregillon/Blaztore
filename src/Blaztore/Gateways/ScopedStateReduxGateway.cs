@@ -18,7 +18,7 @@ internal class ScopedStateReduxGateway<TState, TScope> : IScopedStateReduxGatewa
 
     public TState SubscribeToState(IComponentBase component, TScope? scope)
     {
-        _subscriptions.Add(typeof(TState), scope, component);
+        _subscriptions.Add(component, typeof(TState), scope);
         
         return _store.GetStateOrCreateDefault<TState>(scope);
     }

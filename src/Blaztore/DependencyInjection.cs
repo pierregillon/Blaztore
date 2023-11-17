@@ -11,7 +11,7 @@ public static class DependencyInjection
     {
         var defaultConfiguration = new BlaztoreConfiguration(
             _ => {}, 
-            DisableActionExecutionWhenNoComponentSubscribed: true
+            CanInitializeStateFromActionExecution: false
         );
         
         defaultConfiguration = configure(defaultConfiguration);
@@ -35,5 +35,5 @@ public static class DependencyInjection
 
 public record BlaztoreConfiguration(
     Action<MediatRServiceConfiguration> ConfigureMediator, 
-    bool DisableActionExecutionWhenNoComponentSubscribed
+    bool CanInitializeStateFromActionExecution
 );

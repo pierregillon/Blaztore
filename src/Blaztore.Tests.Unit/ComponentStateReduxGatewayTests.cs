@@ -42,7 +42,7 @@ public class ComponentStateReduxGatewayTests
             .AddBlaztore(x => x with
             {
                 ConfigureMediator = m => m.RegisterServicesFromAssemblyContaining<CounterState>(),
-                DisableActionExecutionWhenNoComponentSubscribed = false
+                CanInitializeStateFromActionExecution = true
             })
             .BuildServiceProvider();
         

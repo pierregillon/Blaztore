@@ -18,9 +18,9 @@ internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState
 
     public TState SubscribeToState(IComponentBase component)
     {
-        _subscriptions.Add(typeof(TState), DefaultScope.Value, component);
+        _subscriptions.Add(component, typeof(TState));
         
-        return _store.GetStateOrCreateDefault<TState>(DefaultScope.Value);
+        return _store.GetStateOrCreateDefault<TState>();
     }
 
     public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
@@ -28,7 +28,7 @@ internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState
     {
         _subscriptions.Remove(stateComponent);
         
-        if (_subscriptions.NoMoreSubscribers(typeof(TState), DefaultScope.Value))
+        if (_subscriptions.NoMoreSubscribers(typeof(TState)))
         {
             _store.Remove<TState>();
         }

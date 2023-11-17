@@ -6,7 +6,7 @@ internal class Subscriptions
 {
     private readonly List<Subscription> _subscriptions = new();
 
-    public void Add(Type stateType, object? stateScope, IComponentBase component)
+    public void Add(IComponentBase component, Type stateType, object? stateScope)
     {
         lock (_subscriptions)
         {
@@ -117,4 +117,13 @@ internal class Subscriptions
         object? StateScope,
         WeakReference<IComponentBase> ComponentReference
     );
+}
+
+internal static class SubscriptionsExtensions
+{
+    public static void Add(this Subscriptions subscriptions, IComponentBase componentBase, Type stateType) =>
+        subscriptions.Add(componentBase, stateType, DefaultScope.Value);
+    
+    public static bool NoMoreSubscribers(this Subscriptions subscriptions, Type stateType) =>
+        subscriptions.NoMoreSubscribers(stateType, DefaultScope.Value);
 }

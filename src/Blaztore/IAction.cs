@@ -10,7 +10,7 @@ public interface IAction<TState> : IAction where TState : IState
 {
     internal TState? GetState(IStore store)
     {
-        if (store.CreateStateFromActionExecution)
+        if (store.CanInitializeStateFromActionExecution)
         {
             return this switch
             {
