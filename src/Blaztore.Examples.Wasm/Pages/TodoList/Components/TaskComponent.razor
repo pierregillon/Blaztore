@@ -49,7 +49,7 @@
 </style>
 
 @inject IScopedStateReduxGateway<TaskComponentState, Guid> Gateway
-@inject ISharedStateReduxGateway<TodoListState> GlobalGateway
+@inject IGlobalStateReduxGateway<TodoListState> GlobalGateway
 
 @code {
     [Parameter]

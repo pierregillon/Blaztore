@@ -24,7 +24,7 @@ else
     </div>
 }
 
-@inject ISharedStateReduxGateway<TaskCreationState> Gateway
+@inject IGlobalStateReduxGateway<TaskCreationState> Gateway
 
 @code {
     private TaskCreationState State => Gateway.SubscribeToState(this);

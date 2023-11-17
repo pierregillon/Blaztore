@@ -17,9 +17,9 @@ public static class DependencyInjection
             .AddScoped<IStore, InMemoryStore>()
             .AddScoped<Subscriptions>()
             .AddScoped<IActionEventPublisher, OnlyActiveComponentActionEventPublisher>()
-            .AddScoped(typeof(ISharedStateReduxGateway<>), typeof(ReduxGateway<>))
+            .AddScoped(typeof(IGlobalStateReduxGateway<>), typeof(ReduxGateway<>))
             .AddScoped(typeof(IScopedStateReduxGateway<,>), typeof(ReduxGateway<,>))
-            .AddScoped(typeof(IUniqueStateReduxGateway<>), typeof(ReduxGateway<>))
+            .AddScoped(typeof(IPerComponentStateReduxGateway<>), typeof(ReduxGateway<>))
             ;
 
         return services;

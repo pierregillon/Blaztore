@@ -5,13 +5,8 @@ namespace Blaztore.Tests.Unit;
 
 public class SubscriptionsTests
 {
-    private readonly Subscriptions _subscriptions;
+    private readonly Subscriptions _subscriptions = new();
 
-    public SubscriptionsTests()
-    {
-        _subscriptions = new Subscriptions();
-    }
-    
     [Fact]
     public void Re_renders_subscribed_component()
     {

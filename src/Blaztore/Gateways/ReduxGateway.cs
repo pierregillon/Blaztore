@@ -3,8 +3,8 @@ using Blaztore.Components;
 namespace Blaztore.Gateways;
 
 internal class ReduxGateway<TState> : 
-    ISharedStateReduxGateway<TState>, 
-    IUniqueStateReduxGateway<TState>
+    IGlobalStateReduxGateway<TState>, 
+    IPerComponentStateReduxGateway<TState>
     where TState : IState
 {
     private readonly IActionDispatcher _actionDispatcher;
@@ -18,13 +18,20 @@ internal class ReduxGateway<TState> :
         _subscriptions = subscriptions;
     }
 
-    public TState SubscribeToState(IStateComponent component)
+    TState IGlobalStateReduxGateway<TState>.SubscribeToState(IStateComponent component)
     {
         var defaultScope = DefaultScope.Value;
         
         _subscriptions.Add(typeof(TState), defaultScope, component);
         
         return _store.GetState<TState>(defaultScope);
+    }
+
+    TState IPerComponentStateReduxGateway<TState>.SubscribeToState(IStateComponent component)
+    {
+        _subscriptions.Add(typeof(TState), component.Id, component);
+        
+        return _store.GetState<TState>(component.Id);
     }
 
     public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);

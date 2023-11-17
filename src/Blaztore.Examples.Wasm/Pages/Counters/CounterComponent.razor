@@ -51,7 +51,7 @@
     }
 </style>
 
-@inject IUniqueStateReduxGateway<CounterComponentState> Gateway
+@inject IPerComponentStateReduxGateway<CounterComponentState> Gateway
 
 @code {
     private CounterComponentState State => Gateway.SubscribeToState(this);

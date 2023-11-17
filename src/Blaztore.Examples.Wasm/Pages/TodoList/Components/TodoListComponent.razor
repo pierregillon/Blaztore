@@ -7,7 +7,7 @@
     <TaskComponent Task="task"></TaskComponent>
 }
 
-@inject ISharedStateReduxGateway<TodoListState> Gateway
+@inject IGlobalStateReduxGateway<TodoListState> Gateway
 
 @code {
     private TodoListState State => Gateway.SubscribeToState(this);

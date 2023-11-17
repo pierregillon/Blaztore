@@ -29,7 +29,7 @@ public abstract class StateComponent : BaseStateComponent, IDisposable
 
 public abstract class StateComponent<TState> : BaseStateComponent, IDisposable where TState : IState
 {
-    [Inject] private ISharedStateReduxGateway<TState> Gateway { get; set; } = default!;
+    [Inject] private IGlobalStateReduxGateway<TState> Gateway { get; set; } = default!;
     [Inject] private Subscriptions Subscriptions { get; set; } = default!;
 
     protected Task Dispatch(IAction<TState> action) => Gateway.Dispatch(action);
