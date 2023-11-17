@@ -10,4 +10,5 @@ public interface IStore
     internal void SetState<T>(T state) where T : IState;
     internal IState? GetState(Type stateType);
     internal IState? GetState(Type stateType, object? scope);
+
 }

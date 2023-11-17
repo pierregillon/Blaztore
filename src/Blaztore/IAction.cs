@@ -8,25 +8,24 @@ public interface IAction : IRequest
 
 public interface IAction<TState> : IAction where TState : IState
 {
-    internal TState GetState(IStore store)
-    {
-        if (this is IActionOnScopedState scoped)
+    internal TState GetState(IStore store) =>
+        this switch
         {
-            return store.GetStateOrCreateDefault<TState>(scoped.Scope);
-        }
-
-        return store.GetStateOrCreateDefault<TState>();
-    }
+            IScopedAction scoped => store.GetStateOrCreateDefault<TState>(scoped.Scope), 
+            _ => store.GetStateOrCreateDefault<TState>()
+        };
 
     internal void SetState(IStore store, TState newState)
     {
-        if (this is IActionOnScopedState actionOnScopedState)
+        switch (this)
         {
-            store.SetState(newState, actionOnScopedState.Scope);
-        }
-        else
-        {
-            store.SetState(newState);
+            case IScopedAction scopedAction:
+                store.SetState(newState, scopedAction.Scope);
+                break;
+            
+            default:
+                store.SetState(newState);
+                break;
         }
     }
 }

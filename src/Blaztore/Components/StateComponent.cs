@@ -27,7 +27,7 @@ public abstract class StateComponent : BaseStateComponent, IDisposable
     }
 }
 
-public abstract class StateComponent<TState> : BaseStateComponent, IDisposable where TState : IState
+public abstract class StateComponent<TState> : BaseStateComponent, IDisposable where TState : IGlobalState
 {
     [Inject] private IGlobalStateReduxGateway<TState> Gateway { get; set; } = default!;
     [Inject] private Subscriptions Subscriptions { get; set; } = default!;

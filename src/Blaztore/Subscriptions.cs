@@ -4,9 +4,7 @@ namespace Blaztore;
 
 internal class Subscriptions
 {
-    private readonly List<Subscription> _subscriptions;
-
-    public Subscriptions() => _subscriptions = new List<Subscription>();
+    private readonly List<Subscription> _subscriptions = new();
 
     public void Add(Type stateType, object? stateScope, IStateComponent component)
     {
@@ -106,7 +104,7 @@ internal class Subscriptions
     }
 
     private record Subscription(
-        ComponentId? ComponentId,
+        ComponentId ComponentId,
         Type StateType,
         object? StateScope,
         WeakReference<IStateComponent> ComponentReference

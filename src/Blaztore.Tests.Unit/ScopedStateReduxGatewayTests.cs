@@ -42,7 +42,7 @@ public class ScopedStateReduxGatewayTests
         return component;
     }
 
-    public record TestState : IState
+    public record TestState : IScopedState<Guid>
     {
         public static TestState Initialize() => new();
     }

@@ -38,11 +38,11 @@ public class EffectTests
             .Be("state value");
     }
     
-    public record TestState(string Value) : IState
+    public record TestState(string Value) : IScopedState<object>
     {
         public static TestState Initialize() => new(string.Empty);
 
-        public record SetInRepo(object Scope, string Value) : IAction<TestState>, IActionOnScopedState
+        public record SetInRepo(object Scope, string Value) : IScopedAction<TestState, object>
         {
             public record Effector(IStore Store, Repository Repository) : IEffect<TestState, SetInRepo>
             {
@@ -54,7 +54,7 @@ public class EffectTests
             }
         }
         
-        public record SetStateValue(object Scope, string Value) : IAction<TestState>, IActionOnScopedState
+        public record SetStateValue(object Scope, string Value) : IScopedAction<TestState, object>
         {
             public record Reducer(IStore Store) : IPureReducer<TestState, SetStateValue>
             {

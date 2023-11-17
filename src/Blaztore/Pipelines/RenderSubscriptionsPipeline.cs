@@ -51,8 +51,8 @@ internal record RenderSubscriptionsPipeline<TRequest, TResponse>(
 
         var stateType = actionInterfaceType.GetGenericArguments().Single();
 
-        var scope = action is IActionOnScopedState stateWithScope
-            ? stateWithScope.Scope
+        var scope = action is IScopedAction scopedAction
+            ? scopedAction.Scope
             : null;
 
         return new ActionDescriptor(stateType, scope);

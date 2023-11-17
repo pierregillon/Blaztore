@@ -3,9 +3,7 @@ using Blaztore.Examples.Wasm.Services;
 
 namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
 
-public record TodoListState(
-    IReadOnlyCollection<TaskListItem> TodoListItems
-) : IState
+public record TodoListState(IReadOnlyCollection<TaskListItem> TodoListItems) : IGlobalState
 {
     public static TodoListState Initialize() => new(new List<TaskListItem>());
 

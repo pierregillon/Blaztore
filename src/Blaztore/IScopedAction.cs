@@ -1,9 +1,14 @@
 namespace Blaztore;
 
-public interface IScopedAction<TState, out TScope> : IAction<TState>, IActionOnScopedState where TState : IState
+public interface IScopedAction<TState, out TScope> : IAction<TState>, IScopedAction 
+    where TState : IScopedState<TScope>
 {
-    TScope? Id { get; }
+    new TScope? Scope { get; }
 
-    object? IActionOnScopedState.Scope => Id;
+    object? IScopedAction.Scope => Scope;
+}
 
+public interface IScopedAction : IAction
+{
+    object? Scope { get; }
 }

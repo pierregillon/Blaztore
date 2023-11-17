@@ -3,11 +3,11 @@ using Blaztore.Components;
 
 namespace Blaztore.Examples.Wasm.Pages.Counters;
 
-public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer? Timer) : IState
+public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer? Timer) : IComponentState
 {
     public static CounterComponentState Initialize() => new(TimeSpan.Zero, false, null);
 
-    public record Start(ComponentId? ComponentId) : IComponentAction<CounterComponentState>
+    public record Start(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
         internal record Effector(IStore Store, IActionDispatcher ActionDispatcher) : IPureReducer<CounterComponentState, Start>
         {
@@ -24,7 +24,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
         }
     }
 
-    public record Count(ComponentId? ComponentId, int Milliseconds) : IComponentAction<CounterComponentState>
+    public record Count(ComponentId ComponentId, int Milliseconds) : IComponentAction<CounterComponentState>
     {
         internal record Effector(IStore Store) : IPureReducer<CounterComponentState, Count>
         {
@@ -36,7 +36,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
         }
     }
 
-    public record Stop(ComponentId? ComponentId) : IComponentAction<CounterComponentState>
+    public record Stop(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
         internal record Effector(IStore Store) : IPureReducerNoAction<CounterComponentState, Stop>
         {
@@ -53,7 +53,7 @@ public record CounterComponentState(TimeSpan CurrentTime, bool IsStarted, Timer?
         }
     }
     
-    public record Reset(ComponentId? ComponentId) : IComponentAction<CounterComponentState>
+    public record Reset(ComponentId ComponentId) : IComponentAction<CounterComponentState>
     {
         internal record Effector(IStore Store) : IPureReducerNoAction<CounterComponentState, Reset>
         {

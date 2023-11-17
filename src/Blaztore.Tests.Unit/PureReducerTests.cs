@@ -54,11 +54,11 @@ public class PureReducerTests
             .Be("Test2");
     }
     
-    public record TestState(string Value) : IState
+    public record TestState(string Value) : IScopedState<object>
     {
         public static TestState Initialize() => new(string.Empty);
 
-        public record Concat(object Scope, string Value) : IAction<TestState>, IActionOnScopedState
+        public record Concat(object Scope, string Value) : IScopedAction<TestState, object>
         {
             public record Reducer(IStore Store) : IPureReducer<TestState, Concat>
             {

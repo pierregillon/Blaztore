@@ -43,7 +43,7 @@ public class GlobalStateReduxGatewayTests
         return component;
     }
 
-    public record TestState(bool IsLoaded) : IState
+    public record TestState(bool IsLoaded) : IGlobalState
     {
         public static TestState Initialize() => new(false);
 

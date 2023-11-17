@@ -2,10 +2,9 @@ using Blaztore.Components;
 
 namespace Blaztore;
 
-public interface IComponentAction<TState> : IAction<TState>, IActionOnScopedState
-    where TState : IState
+public interface IComponentAction<TState> : IAction<TState>, IScopedAction
+    where TState : IComponentState
 {
     public ComponentId? ComponentId { get; }
-    object? IActionOnScopedState.Scope => ComponentId;
-
+    object? IScopedAction.Scope => ComponentId;
 }

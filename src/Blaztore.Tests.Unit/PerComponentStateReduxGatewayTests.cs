@@ -8,7 +8,7 @@ namespace Blaztore.Tests.Unit;
 
 public class PerComponentStateReduxGatewayTests
 {
-    private readonly IPerComponentStateReduxGateway<TestState> _gateway ;
+    private readonly IComponentStateReduxGateway<TestState> _gateway ;
     private readonly IStore _store;
 
     public PerComponentStateReduxGatewayTests()
@@ -17,7 +17,7 @@ public class PerComponentStateReduxGatewayTests
             .AddBlaztore(x => x.RegisterServicesFromAssemblyContaining<TestState>())
             .BuildServiceProvider();
         
-        _gateway = serviceProvider.GetRequiredService<IPerComponentStateReduxGateway<TestState>>();
+        _gateway = serviceProvider.GetRequiredService<IComponentStateReduxGateway<TestState>>();
         _store = serviceProvider.GetRequiredService<IStore>();
     }
     
@@ -40,7 +40,7 @@ public class PerComponentStateReduxGatewayTests
         return component;
     }
 
-    public record TestState : IState
+    public record TestState : IComponentState
     {
         public static TestState Initialize() => new();
     }

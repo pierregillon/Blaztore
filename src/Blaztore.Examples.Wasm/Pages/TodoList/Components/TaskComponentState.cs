@@ -3,14 +3,12 @@ using Blaztore.Examples.Wasm.Services;
 
 namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
 
-public record TaskComponentState(bool IsDeleting) : IState
+public record TaskComponentState(bool IsDeleting) : IScopedState<Guid>
 {
     public static TaskComponentState Initialize() => new(false);
     
-    public record DeleteItem(Guid Id) : IScopedAction<TaskComponentState, Guid>, IActionOnScopedState
+    public record DeleteItem(Guid Id) : ITaskAction
     {
-        public object? Scope => Id;
-        
         private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)
             : IEffect<TaskComponentState, DeleteItem>
         {
@@ -24,10 +22,8 @@ public record TaskComponentState(bool IsDeleting) : IState
         }
     }
 
-    public record StartDeleting(Guid Id) : IAction<TaskComponentState>, IActionOnScopedState
+    public record StartDeleting(Guid Id) : ITaskAction
     {
-        public object? Scope => Id;
-        
         private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, StartDeleting>
         {
             public TaskComponentState Reduce(TaskComponentState state) =>
@@ -38,10 +34,8 @@ public record TaskComponentState(bool IsDeleting) : IState
         }
     }
 
-    public record EndDeleting(Guid Id) : IAction<TaskComponentState>, IActionOnScopedState
+    public record EndDeleting(Guid Id) : ITaskAction
     {
-        public object? Scope => Id;
-        
         private record Reducer(IStore Store) : IPureReducerNoAction<TaskComponentState, EndDeleting>
         {
             public TaskComponentState Reduce(TaskComponentState state) =>
@@ -50,5 +44,11 @@ public record TaskComponentState(bool IsDeleting) : IState
                     IsDeleting = false
                 };
         }
+    }
+
+    private interface ITaskAction : IScopedAction<TaskComponentState, Guid>
+    {
+        public Guid Id { get; }
+        Guid IScopedAction<TaskComponentState, Guid>.Scope => Id;
     }
 }

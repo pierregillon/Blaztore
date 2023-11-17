@@ -3,7 +3,7 @@ using Blaztore.Examples.Wasm.Services;
 
 namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
 
-public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) : IState
+public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) : IGlobalState
 {
     public static TaskCreationState Initialize() => new(false, null);
 

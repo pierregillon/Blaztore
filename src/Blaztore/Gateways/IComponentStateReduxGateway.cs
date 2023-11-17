@@ -2,7 +2,7 @@ using Blaztore.Components;
 
 namespace Blaztore.Gateways;
 
-public interface IPerComponentStateReduxGateway<TState> where TState : IState
+public interface IComponentStateReduxGateway<TState> where TState : IComponentState
 {
     TState SubscribeToState(IStateComponent stateComponent);
     Task Dispatch(IComponentAction<TState> action);

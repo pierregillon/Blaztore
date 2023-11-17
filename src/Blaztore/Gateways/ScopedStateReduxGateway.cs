@@ -2,23 +2,21 @@ using Blaztore.Components;
 
 namespace Blaztore.Gateways;
 
-internal class ReduxGateway<TState> : 
-    IGlobalStateReduxGateway<TState>, 
-    IPerComponentStateReduxGateway<TState>
-    where TState : IState
+internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState> 
+    where TState : IGlobalState
 {
     private readonly IActionDispatcher _actionDispatcher;
     private readonly IStore _store;
     private readonly Subscriptions _subscriptions;
 
-    public ReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
+    public GlobalStateReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
     {
         _actionDispatcher = actionDispatcher;
         _store = store;
         _subscriptions = subscriptions;
     }
 
-    TState IGlobalStateReduxGateway<TState>.SubscribeToState(IStateComponent component)
+    public TState SubscribeToState(IStateComponent component)
     {
         var defaultScope = DefaultScope.Value;
         
@@ -27,27 +25,41 @@ internal class ReduxGateway<TState> :
         return _store.GetStateOrCreateDefault<TState>(defaultScope);
     }
 
-    TState IPerComponentStateReduxGateway<TState>.SubscribeToState(IStateComponent component)
+    public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
+}
+
+internal class ComponentStateReduxGateway<TState> : IComponentStateReduxGateway<TState> 
+    where TState : IComponentState
+{
+    private readonly IActionDispatcher _actionDispatcher;
+    private readonly IStore _store;
+    private readonly Subscriptions _subscriptions;
+
+    public ComponentStateReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
+    {
+        _actionDispatcher = actionDispatcher;
+        _store = store;
+        _subscriptions = subscriptions;
+    }
+
+    public TState SubscribeToState(IStateComponent component)
     {
         _subscriptions.Add(typeof(TState), component.Id, component);
         
         return _store.GetStateOrCreateDefault<TState>(component.Id);
     }
 
-    public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
-
     public Task Dispatch(IComponentAction<TState> action) => _actionDispatcher.Dispatch(action);
 }
 
-internal class ReduxGateway<TState, TScope> :
-    IScopedStateReduxGateway<TState, TScope>
-    where TState : IState
+internal class ScopedStateReduxGateway<TState, TScope> : IScopedStateReduxGateway<TState, TScope> 
+    where TState : IScopedState<TScope>
 {
     private readonly IActionDispatcher _actionDispatcher;
     private readonly IStore _store;
     private readonly Subscriptions _subscriptions;
 
-    public ReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
+    public ScopedStateReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
     {
         _actionDispatcher = actionDispatcher;
         _store = store;
