@@ -24,14 +24,14 @@ internal class ReduxGateway<TState> :
         
         _subscriptions.Add(typeof(TState), defaultScope, component);
         
-        return _store.GetState<TState>(defaultScope);
+        return _store.GetStateOrCreateDefault<TState>(defaultScope);
     }
 
     TState IPerComponentStateReduxGateway<TState>.SubscribeToState(IStateComponent component)
     {
         _subscriptions.Add(typeof(TState), component.Id, component);
         
-        return _store.GetState<TState>(component.Id);
+        return _store.GetStateOrCreateDefault<TState>(component.Id);
     }
 
     public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
@@ -39,7 +39,7 @@ internal class ReduxGateway<TState> :
     public Task Dispatch(IComponentAction<TState> action) => _actionDispatcher.Dispatch(action);
 }
 
-internal class ReduxGateway<TState, TScope> : 
+internal class ReduxGateway<TState, TScope> :
     IScopedStateReduxGateway<TState, TScope>
     where TState : IState
 {
@@ -54,11 +54,11 @@ internal class ReduxGateway<TState, TScope> :
         _subscriptions = subscriptions;
     }
 
-    public TState SubscribeToState(IStateComponent component, TScope scope)
+    public TState SubscribeToState(IStateComponent component, TScope? scope)
     {
         _subscriptions.Add(typeof(TState), scope, component);
         
-        return _store.GetState<TState>(scope);
+        return _store.GetStateOrCreateDefault<TState>(scope);
     }
 
     public Task Dispatch(IScopedAction<TState, TScope> action) => _actionDispatcher.Dispatch(action);

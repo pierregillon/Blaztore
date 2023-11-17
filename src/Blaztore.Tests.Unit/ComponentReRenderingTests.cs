@@ -28,9 +28,9 @@ public class ComponentReRenderingTests
         var stateComponent = Substitute.For<IStateComponent>();
         
         _subscriptions.Add(typeof(TestState), DefaultScope.Value, stateComponent);
-        
-        var state = _store.GetState<TestState>();
-        
+
+        var state = _store.GetStateOrCreateDefault<TestState>();
+
         _actionDispatcher.Dispatch(new TestState.DefineState(state));
         
         stateComponent

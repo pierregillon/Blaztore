@@ -1,3 +1,4 @@
+using Blaztore.ActionHandling;
 using Blaztore.Components;
 using Blaztore.Gateways;
 using FluentAssertions;
@@ -10,6 +11,7 @@ public class GlobalStateReduxGatewayTests
 {
     private readonly IGlobalStateReduxGateway<TestState> _gateway ;
     private readonly IStore _store;
+    private readonly IActionDispatcher _dispatcher;
 
     public GlobalStateReduxGatewayTests()
     {
@@ -19,6 +21,7 @@ public class GlobalStateReduxGatewayTests
         
         _gateway = serviceProvider.GetRequiredService<IGlobalStateReduxGateway<TestState>>();
         _store = serviceProvider.GetRequiredService<IStore>();
+        _dispatcher = serviceProvider.GetRequiredService<IActionDispatcher>();
     }
     
     [Fact]
@@ -40,8 +43,17 @@ public class GlobalStateReduxGatewayTests
         return component;
     }
 
-    public record TestState : IState
+    public record TestState(bool IsLoaded) : IState
     {
-        public static TestState Initialize() => new();
+        public static TestState Initialize() => new(false);
+
+        public record Load : IAction<TestState>
+        {
+            internal record Reducer(IStore Store) : IPureReducer<TestState, Load>
+            {
+                public TestState Reduce(TestState state, Load action) =>
+                    state with { IsLoaded = true };
+            }
+        }
     }
 }

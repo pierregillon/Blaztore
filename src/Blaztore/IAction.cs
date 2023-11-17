@@ -12,10 +12,10 @@ public interface IAction<TState> : IAction where TState : IState
     {
         if (this is IActionOnScopedState scoped)
         {
-            return store.GetState<TState>(scoped.Scope);
+            return store.GetStateOrCreateDefault<TState>(scoped.Scope);
         }
 
-        return store.GetState<TState>();
+        return store.GetStateOrCreateDefault<TState>();
     }
 
     internal void SetState(IStore store, TState newState)

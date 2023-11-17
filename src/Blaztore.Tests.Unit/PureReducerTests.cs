@@ -29,7 +29,7 @@ public class PureReducerTests
         
         var state = _store.GetState<TestState>(scope);
 
-        state.Value.Should().Be("TestTest1");
+        state!.Value.Should().Be("TestTest1");
     }
 
     [Fact]
@@ -42,12 +42,14 @@ public class PureReducerTests
         _actionDispatcher.Dispatch(new TestState.Concat(scope2, "Test2"));
         
         var state1 = _store.GetState<TestState>(scope1);
-        state1.Value
+        
+        state1!.Value
             .Should()
             .Be("Test1");
         
         var state2 = _store.GetState<TestState>(scope2);
-        state2.Value
+        
+        state2!.Value
             .Should()
             .Be("Test2");
     }

@@ -51,7 +51,7 @@ internal class Subscriptions
         ReRender(subscriptions);
     }
 
-    public void ReRenderSubscribers(Type stateType, object stateScope)
+    public void ReRenderSubscribers(Type stateType, object? stateScope)
     {
         Subscription[] subscriptions;
 

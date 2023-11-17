@@ -69,7 +69,7 @@ internal record RenderSubscriptionsPipeline<TRequest, TResponse>(
 
     private record ActionDescriptor(Type StateType, object? Scope)
     {
-        public object GetState(IStore store) =>
+        public IState? GetState(IStore store) =>
             Scope is null
                 ? store.GetState(StateType)
                 : store.GetState(StateType, Scope);

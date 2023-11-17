@@ -8,29 +8,44 @@ public class InMemoryStore : IStore
     private readonly IDictionary<(Type StateType, object? StateScope), IState> _states =
         new ConcurrentDictionary<(Type, object?), IState>();
 
-    public T GetState<T>() where T : IState =>
-        GetState<T>(DefaultScope.Value);
-
-    public T GetState<T>(object? scope) where T : IState =>
-        (T)GetState(typeof(T), scope);
-
-    public object GetState(Type stateType) => 
-        GetState(stateType, DefaultScope.Value);
-
-    public object GetState(Type stateType, object? scope)
+    public T GetStateOrCreateDefault<T>(object? scope) where T : IState
     {
+        var stateType = typeof(T);
+        
         lock (_states)
         {
             if (_states.TryGetValue((stateType, scope), out var state))
             {
-                return state;
+                return (T)state;
             }
 
             state = CreateDefaultState(stateType);
             
             _states.Add((stateType, scope), state);
 
-            return state;
+            return (T)state;
+        }
+    }
+
+    public T GetStateOrCreateDefault<T>() where T : IState =>
+        GetStateOrCreateDefault<T>(DefaultScope.Value);
+
+    public T? GetState<T>() where T : IState =>
+        GetState<T>(DefaultScope.Value);
+
+    public T? GetState<T>(object? scope) where T : IState =>
+        (T?)GetState(typeof(T), scope);
+
+    public IState? GetState(Type stateType) => 
+        GetState(stateType, DefaultScope.Value);
+
+    public IState? GetState(Type stateType, object? scope)
+    {
+        lock (_states)
+        {
+            return _states.TryGetValue((stateType, scope), out var state) 
+                ? state 
+                : null;
         }
     }
 

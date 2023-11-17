@@ -17,7 +17,7 @@ public abstract class StateComponent : BaseStateComponent, IDisposable
     {
         var stateType = typeof(T);
         Subscriptions.Add(stateType, scope, this);
-        return Store.GetState<T>(scope);
+        return Store.GetStateOrCreateDefault<T>(scope);
     }
 
     public virtual void Dispose()
