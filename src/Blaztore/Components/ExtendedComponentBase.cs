@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Components;
 
 namespace Blaztore.Components;
@@ -19,16 +18,15 @@ public class ExtendedComponentBase : ComponentBase
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        var initialValues = GetInitialParameterValues().OrderBy(x => x.Key);
+        var newValues = parameters.ToDictionary();
+        var initialValues = GetInitialParameterValues(newValues.Keys.ToList());
 
         await base.SetParametersAsync(parameters);
 
-        var newValues = parameters.ToDictionary().OrderBy(x => x.Key);
-
-        List<ChangedParameters> changedParameters =
-            (from element in initialValues.Zip(newValues)
+        var changedParameters =
+            (from element in initialValues.OrderBy(x => x.Key).Zip(newValues.OrderBy(x => x.Key))
                 where !Equals(element.First.Value, element.Second.Value)
-                select new ChangedParameters(element.First.Key, element.First.Value, element.Second.Value)
+                select new ChangedParameter(element.First.Key, element.First.Value, element.Second.Value)
             ).ToList();
 
         if (changedParameters.Any())
@@ -37,14 +35,15 @@ public class ExtendedComponentBase : ComponentBase
         }
     }
 
-    private Dictionary<string, object?> GetInitialParameterValues() =>
+    private Dictionary<string, object?> GetInitialParameterValues(IReadOnlyCollection<string> keys) =>
         GetType()
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null)
+            .GetParameterProperties()
+            .Where(x => keys.Contains(x.Name))
             .ToDictionary(x => x.Name, x => x.GetValue(this));
 
-    protected virtual Task OnParametersChangedAsync(IReadOnlyCollection<ChangedParameters> parameters) =>
+
+    protected virtual Task OnParametersChangedAsync(IReadOnlyCollection<ChangedParameter> parameters) =>
         Task.CompletedTask;
 }
 
-public record ChangedParameters(string ParameterName, object? PreviousValue, object NewValue);
+public record ChangedParameter(string ParameterName, object? PreviousValue, object NewValue);
