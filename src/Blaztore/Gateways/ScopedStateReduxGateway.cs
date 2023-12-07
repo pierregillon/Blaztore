@@ -30,7 +30,7 @@ internal class ScopedStateReduxGateway<TState, TScope> : IScopedStateReduxGatewa
     {
         _subscriptions.Remove(stateComponent);
 
-        if (_subscriptions.NoMoreSubscribers(typeof(TState), scope))
+        if (!typeof(TState).IsPersistentState() && _subscriptions.NoMoreSubscribers(typeof(TState), scope))
         {
             _store.Remove<TState>(scope);
         }

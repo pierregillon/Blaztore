@@ -30,7 +30,7 @@ internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState
     {
         _subscriptions.Remove(stateComponent);
         
-        if (_subscriptions.NoMoreSubscribers(typeof(TState)))
+        if (!typeof(TState).IsPersistentState() && _subscriptions.NoMoreSubscribers(typeof(TState)))
         {
             _store.Remove<TState>();
         }

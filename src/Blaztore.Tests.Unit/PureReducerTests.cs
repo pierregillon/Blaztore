@@ -28,14 +28,14 @@ public class PureReducerTests
     }
 
     [Fact]
-    public void Reducing_updates_scoped_state_based_on_action_scope()
+    public async Task Reducing_updates_scoped_state_based_on_action_scope()
     {
         var scope = Guid.NewGuid();
 
         _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope);
         
-        _gateway.Dispatch(new ConcatState.Concat(scope, "Test"));
-        _gateway.Dispatch(new ConcatState.Concat(scope, "Test1"));
+        await _gateway.Dispatch(new ConcatState.Concat(scope, "Test"));
+        await _gateway.Dispatch(new ConcatState.Concat(scope, "Test1"));
         
         var state = _store.GetState<ConcatState>(scope);
 
@@ -43,15 +43,15 @@ public class PureReducerTests
     }
 
     [Fact]
-    public void Reducing_does_not_update_state_with_other_scope()
+    public async Task Reducing_does_not_update_state_with_other_scope()
     {
         var scope1 = Guid.NewGuid();
         _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope1);
-        _gateway.Dispatch(new ConcatState.Concat(scope1, "Test1"));
+        await _gateway.Dispatch(new ConcatState.Concat(scope1, "Test1"));
         
         var scope2 = Guid.NewGuid();
         _gateway.SubscribeToState(Substitute.For<IComponentBase>(), scope2);
-        _gateway.Dispatch(new ConcatState.Concat(scope2, "Test2"));
+        await _gateway.Dispatch(new ConcatState.Concat(scope2, "Test2"));
         
         var state1 = _store.GetState<ConcatState>(scope1);
         

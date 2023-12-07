@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using Blaztore.Gateways;
 
 namespace Blaztore.States;
 
@@ -63,16 +64,30 @@ public class InMemoryStore : IStore
         }
     }
 
-    private static IState CreateDefaultState(Type type)
+    private static IState CreateDefaultState(Type stateType)
     {
-        var initializeMethod = type.GetMethod("Initialize", BindingFlags.Static | BindingFlags.Public);
+        var initializeMethod = stateType.GetMethod("Initialize", BindingFlags.Static | BindingFlags.Public);
         if (initializeMethod is null)
         {
             throw new InvalidOperationException(
-                $"A static Initialize() method should be defined on type {type.Name} in order to have the initial state."
+                $"A static Initialize() method should be defined on type {stateType.Name} in order to have the initial state."
             );
         }
 
+        if (stateType.IsPersistentState() && stateType.IsComponentState())
+        {
+            throw new ComponentStateCannotBePersistentException();
+        }
+
         return (IState)initializeMethod.Invoke(null, Array.Empty<object?>())!;
+    }
+}
+
+internal class ComponentStateCannotBePersistentException : Exception
+{
+    public ComponentStateCannotBePersistentException()
+        :base("A component state cannot be persistent because its lifecycle is by design bound to the component lifecycle.")
+    {
+        
     }
 }
