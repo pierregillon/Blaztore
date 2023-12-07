@@ -6,7 +6,7 @@ using Blaztore.States;
 using Blaztore.Tests.Unit.States;
 using FluentAssertions;
 
-namespace Blaztore.Tests.Unit;
+namespace Blaztore.Tests.Unit.Behaviours;
 
 public abstract class StateInstanciableFromActionExecutionTests
 {
