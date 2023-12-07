@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.AspNetCore.Components;
 
 namespace Blaztore.Components;
@@ -10,11 +11,14 @@ public class ExtendedComponentBase : ComponentBase
     {
         if (firstRender)
         {
+            IsRendered = true;
             await OnAfterInitialRenderAsync();
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    public bool IsRendered { get; private set; }
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
@@ -31,7 +35,7 @@ public class ExtendedComponentBase : ComponentBase
 
         if (changedParameters.Any())
         {
-            await OnParametersChangedAsync(changedParameters);
+            await OnParametersChangedAsync(new ChangedParameters(changedParameters));
         }
     }
 
@@ -42,8 +46,30 @@ public class ExtendedComponentBase : ComponentBase
             .ToDictionary(x => x.Name, x => x.GetValue(this));
 
 
-    protected virtual Task OnParametersChangedAsync(IReadOnlyCollection<ChangedParameter> parameters) =>
+    protected virtual async Task OnParametersChangedAsync(ChangedParameters parameters)
+    {
+        if (IsRendered)
+        {
+            await OnParametersChangedAfterComponentRendered(parameters);
+        }
+    }
+
+    protected virtual Task OnParametersChangedAfterComponentRendered(ChangedParameters parameters) =>
         Task.CompletedTask;
 }
 
 public record ChangedParameter(string ParameterName, object? PreviousValue, object NewValue);
+
+public record ChangedParameters(IReadOnlyCollection<ChangedParameter> Values) : IEnumerable<ChangedParameter>
+{
+    private IReadOnlyCollection<ChangedParameter> Values { get; } = Values;
+
+    public IEnumerator<ChangedParameter> GetEnumerator() =>
+        Values.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
+
+    public bool HasChanged(string name) =>
+        Values.Any(x => x.ParameterName == name);
+}
