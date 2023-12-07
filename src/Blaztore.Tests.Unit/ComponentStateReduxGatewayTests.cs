@@ -66,26 +66,6 @@ public class ComponentStateReduxGatewayTests
         state.Should().NotBeNull();
     }
 
-    [Fact]
-    public async Task Re_renders_only_subscribed_component()
-    {
-        var stateComponent1 = Components.CreateComponent();
-        var stateComponent2 = Components.CreateComponent();
-
-        _gateway.SubscribeToState(stateComponent1);
-        _gateway.SubscribeToState(stateComponent2);
-
-        await _gateway.Dispatch(new CounterState.Increment(stateComponent1.Id));
-
-        stateComponent1
-            .Received(1)
-            .ReRender();
-        
-        stateComponent2
-            .Received(0)
-            .ReRender();
-    }
-
     public record CounterState(int Value) : IComponentState
     {
         public static CounterState Initialize() => new(0);

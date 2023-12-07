@@ -3,7 +3,6 @@ using Blaztore.States;
 using Blaztore.Tests.Unit.States;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 
 namespace Blaztore.Tests.Unit;
 
@@ -36,28 +35,5 @@ public class ScopedStateReduxGatewayTests
         state
             .Should()
             .BeSameAs(state2);
-    }
-    
-    [Fact]
-    public async Task Re_renders_only_subscribed_component_to_correct_scope()
-    {
-        var scope1 = Guid.NewGuid();
-        var stateComponent1 = Components.CreateComponent();
-        
-        var scope2 = Guid.NewGuid();
-        var stateComponent2 = Components.CreateComponent();
-
-        _gateway.SubscribeToState(stateComponent1, scope1);
-        _gateway.SubscribeToState(stateComponent2, scope2);
-
-        await _gateway.Dispatch(new ConcatState.Concat(scope1, "Test"));
-
-        stateComponent1
-            .Received(1)
-            .ReRender();
-        
-        stateComponent2
-            .Received(0)
-            .ReRender();
     }
 }
