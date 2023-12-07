@@ -1,3 +1,6 @@
+using Blaztore.Actions;
+using Blaztore.States;
+
 namespace Blaztore.ActionHandling;
 
 public interface IPureReducer<TState, in TAction> : IReducer<TState, TAction> 

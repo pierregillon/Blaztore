@@ -1,4 +1,5 @@
 using Blaztore.Components;
+using Blaztore.States;
 using NSubstitute;
 
 namespace Blaztore.Tests.Unit;

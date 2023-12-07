@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace Blaztore;
+namespace Blaztore.States;
 
 public class InMemoryStore : IStore
 {

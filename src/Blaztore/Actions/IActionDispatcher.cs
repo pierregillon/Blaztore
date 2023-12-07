@@ -1,4 +1,4 @@
-namespace Blaztore;
+namespace Blaztore.Actions;
 
 public interface IActionDispatcher
 {

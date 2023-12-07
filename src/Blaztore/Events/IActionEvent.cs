@@ -1,4 +1,6 @@
-namespace Blaztore;
+using Blaztore.States;
+
+namespace Blaztore.Events;
 
 public interface IActionEvent
 {

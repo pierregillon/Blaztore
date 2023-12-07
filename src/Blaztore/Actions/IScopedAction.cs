@@ -1,4 +1,6 @@
-namespace Blaztore;
+using Blaztore.States;
+
+namespace Blaztore.Actions;
 
 public interface IScopedAction<TState, out TScope> : IAction<TState>, IScopedAction 
     where TState : IScopedState<TScope>

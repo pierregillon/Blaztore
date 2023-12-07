@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Blaztore;
+namespace Blaztore.Actions;
 
 internal class MediatorActionDispatcher : IActionDispatcher
 {

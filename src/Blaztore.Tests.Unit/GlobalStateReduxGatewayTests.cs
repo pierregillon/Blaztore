@@ -1,5 +1,6 @@
 using Blaztore.Components;
 using Blaztore.Gateways;
+using Blaztore.States;
 using Blaztore.Tests.Unit.States;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;

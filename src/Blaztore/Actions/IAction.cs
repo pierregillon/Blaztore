@@ -1,6 +1,7 @@
+using Blaztore.States;
 using MediatR;
 
-namespace Blaztore;
+namespace Blaztore.Actions;
 
 public interface IAction : IRequest
 {

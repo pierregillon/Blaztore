@@ -1,4 +1,4 @@
-namespace Blaztore;
+namespace Blaztore.Events;
 
 public interface IActionEventListener<in TEvent> where TEvent : IActionEvent
 {

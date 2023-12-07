@@ -1,6 +1,7 @@
 using Blaztore.Components;
+using Blaztore.States;
 
-namespace Blaztore;
+namespace Blaztore.Actions;
 
 public interface IComponentAction<TState> : IAction<TState>, IScopedAction
     where TState : IComponentState

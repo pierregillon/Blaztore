@@ -1,4 +1,7 @@
-namespace Blaztore;
+using Blaztore.Components;
+using Blaztore.States;
+
+namespace Blaztore.Events;
 
 internal class OnlyActiveComponentActionEventPublisher : IActionEventPublisher
 {

@@ -1,6 +1,6 @@
-using Blaztore.Components;
+using Blaztore.States;
 
-namespace Blaztore;
+namespace Blaztore.Components;
 
 internal class Subscriptions
 {
@@ -117,13 +117,4 @@ internal class Subscriptions
         object? StateScope,
         WeakReference<IComponentBase> ComponentReference
     );
-}
-
-internal static class SubscriptionsExtensions
-{
-    public static void Add(this Subscriptions subscriptions, IComponentBase componentBase, Type stateType) =>
-        subscriptions.Add(componentBase, stateType, DefaultScope.Value);
-    
-    public static bool NoMoreSubscribers(this Subscriptions subscriptions, Type stateType) =>
-        subscriptions.NoMoreSubscribers(stateType, DefaultScope.Value);
 }

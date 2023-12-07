@@ -1,4 +1,4 @@
-namespace Blaztore;
+namespace Blaztore.States;
 
 internal static class DefaultScope
 {
