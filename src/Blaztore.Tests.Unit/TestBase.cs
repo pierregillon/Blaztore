@@ -21,5 +21,5 @@ public abstract class TestBase
         Store = GetService<IStore>();
     }
 
-    protected T GetService<T>() => _serviceProvider.GetRequiredService<T>();
+    protected T GetService<T>() where T : notnull => _serviceProvider.GetRequiredService<T>();
 }

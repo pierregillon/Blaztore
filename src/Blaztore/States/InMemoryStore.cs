@@ -62,9 +62,7 @@ public class InMemoryStore : IStore
         var initializeMethod = stateType.GetMethod("Initialize", BindingFlags.Static | BindingFlags.Public);
         if (initializeMethod is null)
         {
-            throw new InvalidOperationException(
-                $"A static Initialize() method should be defined on type {stateType.Name} in order to have the initial state."
-            );
+            throw new MissingInitializeMethodException(stateType);
         }
 
         if (stateType.IsPersistentState() && stateType.IsComponentState())
@@ -72,7 +70,28 @@ public class InMemoryStore : IStore
             throw new ComponentStateCannotBePersistentException();
         }
 
+        if (!stateType.IsGlobalState() && !stateType.IsScopedState() && !stateType.IsComponentState())
+        {
+            throw new MissingStateUsageException(stateType);
+        }
+
         return (IState)initializeMethod.Invoke(null, Array.Empty<object?>())!;
+    }
+}
+
+internal class MissingStateUsageException : Exception
+{
+    public MissingStateUsageException(Type stateType) : base($"The state {stateType.Name} must implement '{nameof(IGlobalState)}' or '{typeof(IScopedState<>).Name}' or '{nameof(IComponentState)}', in order to provide a state access.")
+    {
+        
+    }
+}
+
+internal class MissingInitializeMethodException : Exception
+{
+    public MissingInitializeMethodException(Type stateType) : base($"A static Initialize() method should be defined on type {stateType.Name} in order to have the initial state.")
+    {
+        
     }
 }
 
