@@ -1,13 +1,10 @@
-using System.ComponentModel;
 using Blaztore.ActionHandling;
 using Blaztore.Actions;
 using Blaztore.Components;
 using Blaztore.Gateways;
 using Blaztore.States;
-using Blaztore.Tests.Unit.States;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 
 namespace Blaztore.Tests.Unit;
 
@@ -43,29 +40,6 @@ public class ComponentStateReduxGatewayTests
             .BeSameAs(counterState);
     }
     
-    [Fact]
-    public async Task Executes_action_when_no_component_has_subscribed_to_state_when_overriden_in_configuration()
-    {
-        var serviceProvider = new ServiceCollection()
-            .AddBlaztore(x => x with
-            {
-                ConfigureMediator = m => m.RegisterServicesFromAssemblyContaining<CounterState>(),
-                CanInitializeStateFromActionExecution = true
-            })
-            .BuildServiceProvider();
-        
-        var gateway = serviceProvider.GetRequiredService<IComponentStateReduxGateway<CounterState>>();
-        var store = serviceProvider.GetRequiredService<IStore>();
-        
-        var componentId = ComponentId.New();
-        
-        await gateway.Dispatch(new CounterState.Increment(componentId));
-
-        var state = store.GetState<CounterState>(componentId);
-
-        state.Should().NotBeNull();
-    }
-
     public record CounterState(int Value) : IComponentState
     {
         public static CounterState Initialize() => new(0);

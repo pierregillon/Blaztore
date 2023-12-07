@@ -2,8 +2,6 @@ namespace Blaztore.States;
 
 public interface IStore
 {
-    bool CanInitializeStateFromActionExecution { get; }
-
     T? GetState<T>(object? key) where T : IState;
     internal IState? GetState(Type stateType, object? key);
     internal T GetStateOrCreateDefault<T>(object? key) where T : IState;

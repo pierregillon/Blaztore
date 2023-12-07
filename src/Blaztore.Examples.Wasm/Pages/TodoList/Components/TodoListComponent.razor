@@ -7,8 +7,6 @@
     <TaskComponent Task="task"></TaskComponent>
 }
 
-@inject IGlobalStateReduxGateway<TodoListState> Gateway
-
 @code {
     protected override Task OnAfterInitialRenderAsync() =>
         Dispatch(new TodoListState.Load());

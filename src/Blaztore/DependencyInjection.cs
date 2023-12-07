@@ -14,8 +14,7 @@ public static class DependencyInjection
     public static IServiceCollection AddBlaztore(this IServiceCollection services, Func<BlaztoreConfiguration, BlaztoreConfiguration> configure)
     {
         var defaultConfiguration = new BlaztoreConfiguration(
-            _ => {}, 
-            CanInitializeStateFromActionExecution: false
+            _ => {}
         );
         
         defaultConfiguration = configure(defaultConfiguration);
@@ -38,6 +37,5 @@ public static class DependencyInjection
 }
 
 public record BlaztoreConfiguration(
-    Action<MediatRServiceConfiguration> ConfigureMediator, 
-    bool CanInitializeStateFromActionExecution
+    Action<MediatRServiceConfiguration> ConfigureMediator
 );

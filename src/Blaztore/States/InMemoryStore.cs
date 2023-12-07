@@ -6,15 +6,8 @@ namespace Blaztore.States;
 
 public class InMemoryStore : IStore
 {
-    private readonly BlaztoreConfiguration _configuration;
-
     private readonly IDictionary<(Type StateType, object? Key), IState> _states =
         new ConcurrentDictionary<(Type, object?), IState>();
-
-    public InMemoryStore(BlaztoreConfiguration configuration) =>
-        _configuration = configuration;
-
-    public bool CanInitializeStateFromActionExecution => _configuration.CanInitializeStateFromActionExecution;
 
     public T? GetState<T>(object? key) where T : IState =>
         (T?)GetState(typeof(T), key);
