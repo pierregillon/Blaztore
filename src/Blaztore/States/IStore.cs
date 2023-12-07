@@ -1,5 +1,8 @@
 namespace Blaztore.States;
 
+/// <summary>
+/// The store manipulates states.
+/// </summary>
 public interface IStore
 {
     T? GetState<T>(object? key) where T : IState;

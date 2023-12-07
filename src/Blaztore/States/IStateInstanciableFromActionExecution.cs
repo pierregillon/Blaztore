@@ -3,9 +3,10 @@ namespace Blaztore.States;
 /// <summary>
 /// By default, state action execution are ignored if no state has been created yet.
 /// Implementing this interface allows the instanciation of a default state
-/// on action execution requested and no state have being created yet.
+/// in order to execute the action. The newly created state is stored and will be used
+/// by components.
 /// </summary>
-public interface IStateInstanciableFromActionExecution
+public interface IStateInstanciableFromActionExecution : IState
 {
     
 }
