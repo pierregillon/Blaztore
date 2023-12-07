@@ -38,30 +38,6 @@ public class GlobalStateReduxGatewayTests
             .BeSameAs(state2);
     }
     
-    [Fact]
-    public async Task Does_not_execute_action_when_no_component_has_subscribed_to_state()
-    {
-        await _gateway.Dispatch(new TestGlobalState.DefineState(new TestGlobalState("my value")));
-
-        var state = _store.GetState<TestGlobalState>();
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_component_unsubscribed()
-    {
-        var stateComponent = Components.SomeComponent;
-        
-        _gateway.SubscribeToState(stateComponent);
-        _gateway.UnsubscribeFromState(stateComponent);
-        
-        await _gateway.Dispatch(new TestGlobalState.DefineState(new TestGlobalState("my value")));
-
-        var state = _store.GetState<TestGlobalState>();
-
-        state.Should().BeNull();
-    }
     
     [Fact]
     public async Task Dispatching_an_action_that_does_not_change_state_does_not_re_render_subscribed_components()

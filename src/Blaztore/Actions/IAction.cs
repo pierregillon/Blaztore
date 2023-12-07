@@ -1,3 +1,4 @@
+using Blaztore.Gateways;
 using Blaztore.States;
 using MediatR;
 
@@ -11,7 +12,7 @@ public interface IAction<TState> : IAction where TState : IState
 {
     internal TState? GetState(IStore store)
     {
-        if (store.CanInitializeStateFromActionExecution)
+        if (store.CanInitializeStateFromActionExecution || typeof(TState).IsInstanciableFromActionExecution())
         {
             return this switch
             {

@@ -39,49 +39,6 @@ public class ScopedStateReduxGatewayTests
     }
     
     [Fact]
-    public async Task Does_not_execute_action_when_no_component_has_subscribed_to_state()
-    {
-        var scope = Guid.NewGuid();
-        
-        await _gateway.Dispatch(new ConcatState.Concat(scope, "my value"));
-
-        var state = _store.GetState<TestGlobalState>(scope);
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_component_unsubscribed()
-    {
-        var stateComponent = Components.SomeComponent;
-        var scope = Guid.NewGuid();
-
-        _gateway.SubscribeToState(stateComponent, scope);
-        _gateway.UnsubscribeFromState(stateComponent, scope);
-        
-        await _gateway.Dispatch(new ConcatState.Concat(Guid.NewGuid(), "my value"));
-
-        var state = _store.GetState<TestGlobalState>(scope);
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_another_scoped_component_is_loaded()
-    {
-        var scope1 = Guid.NewGuid();
-        var scope2 = Guid.NewGuid();
-        
-        _gateway.SubscribeToState(Components.SomeComponent, scope1);
-        
-        await _gateway.Dispatch(new ConcatState.Concat(scope2, "my value"));
-
-        var state = _store.GetState<TestGlobalState>(scope2);
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
     public async Task Re_renders_only_subscribed_component_to_correct_scope()
     {
         var scope1 = Guid.NewGuid();

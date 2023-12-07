@@ -65,50 +65,6 @@ public class ComponentStateReduxGatewayTests
 
         state.Should().NotBeNull();
     }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_no_component_has_subscribed_to_state()
-    {
-        var componentId = ComponentId.New();
-        
-        await _gateway.Dispatch(new CounterState.Increment(componentId));
-
-        var state = _store.GetState<CounterState>(componentId);
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_component_unsubscribed()
-    {
-        var stateComponent = Components.SomeComponent;
-
-        _gateway.SubscribeToState(stateComponent);
-        _gateway.UnsubscribeFromState(stateComponent);
-        
-        await _gateway.Dispatch(new CounterState.Increment(stateComponent.Id));
-
-        var state = _store.GetState<CounterState>(stateComponent.Id);
-
-        state.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task Does_not_execute_action_when_the_target_component_is_not_loaded()
-    {
-        var component1 = Components.CreateComponent();
-        var component2 = Components.CreateComponent();
-        
-        _gateway.SubscribeToState(component1);
-        _gateway.SubscribeToState(component2);
-        
-        _gateway.UnsubscribeFromState(component2);
-        await _gateway.Dispatch(new CounterState.Increment(component2.Id));
-
-        var state = _store.GetState<CounterState>(component2.Id);
-
-        state.Should().BeNull();
-    }
 
     [Fact]
     public async Task Re_renders_only_subscribed_component()
