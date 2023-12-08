@@ -31,7 +31,7 @@ public abstract class BlaztoreComponentBase<TState> : BlaztoreComponentBase, IDi
     protected TState State => Gateway.SubscribeToState(this);
     protected Task Dispatch(IAction<TState> action) => Gateway.Dispatch(action);
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         Gateway.UnsubscribeFromState(this);
         GC.SuppressFinalize(this);
@@ -46,7 +46,7 @@ public abstract class BlaztoreComponentBaseWithComponentState<TState> : Blaztore
     protected TState State => Gateway.SubscribeToState(this);
     protected Task Dispatch(IComponentAction<TState> action) => Gateway.Dispatch(action);
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         Gateway.UnsubscribeFromState(this);
         GC.SuppressFinalize(this);
