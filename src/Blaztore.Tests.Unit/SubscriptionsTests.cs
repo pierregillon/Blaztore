@@ -55,9 +55,9 @@ public class SubscriptionsTests
 
     private static IComponentBase CreateComponent()
     {
-        var stateComponent = Substitute.For<IComponentBase>();
-        stateComponent.Id.Returns(ComponentId.New());
-        return stateComponent;
+        var component = Substitute.For<IComponentBase>();
+        component.Id.Returns(ComponentId.New());
+        return component;
     }
 
     public record TestState(string Value) : IState

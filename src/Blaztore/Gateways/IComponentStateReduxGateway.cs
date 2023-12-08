@@ -6,7 +6,7 @@ namespace Blaztore.Gateways;
 
 public interface IComponentStateReduxGateway<TState> where TState : IComponentState
 {
-    TState SubscribeToState(IComponentBase stateComponent);
+    TState SubscribeToState(IComponentBase component);
     Task Dispatch(IComponentAction<TState> action);
-    void UnsubscribeFromState(IComponentBase stateComponent);
+    void UnsubscribeFromState(IComponentBase component);
 }

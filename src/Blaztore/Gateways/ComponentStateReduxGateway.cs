@@ -27,13 +27,13 @@ internal class ComponentStateReduxGateway<TState> : IComponentStateReduxGateway<
 
     public Task Dispatch(IComponentAction<TState> action) => _actionDispatcher.Dispatch(action);
     
-    public void UnsubscribeFromState(IComponentBase stateComponent)
+    public void UnsubscribeFromState(IComponentBase component)
     {
-        _subscriptions.Remove(stateComponent);
+        _subscriptions.Remove(component);
         
-        if (_subscriptions.NoMoreSubscribers(typeof(TState), stateComponent.Id))
+        if (_subscriptions.NoMoreSubscribers(typeof(TState), component.Id))
         {
-            _store.Remove<TState>(stateComponent.Id);
+            _store.Remove<TState>(component.Id);
         }
     }
 }

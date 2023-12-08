@@ -27,12 +27,12 @@ public abstract class StateInstanciableFromActionExecutionTests
         [Fact]
         public async Task By_default_does_not_execute_action_when_state_destroyed_after_last_component_unsubscribed()
         {
-            var stateComponent = Components.SomeComponent;
+            var component = Components.SomeComponent;
         
             var gateway = GetService<IGlobalStateReduxGateway<TestGlobalState>>();
             
-            gateway.SubscribeToState(stateComponent);
-            gateway.UnsubscribeFromState(stateComponent);
+            gateway.SubscribeToState(component);
+            gateway.UnsubscribeFromState(component);
         
             await gateway.Dispatch(new TestGlobalState.DefineState(new TestGlobalState("my value")));
 
@@ -44,12 +44,12 @@ public abstract class StateInstanciableFromActionExecutionTests
         [Fact]
         public async Task Can_execute_action_when_state_is_persistent_after_last_component_unsubscribed()
         {
-            var stateComponent = Components.SomeComponent;
+            var component = Components.SomeComponent;
         
             var gateway = GetService<IGlobalStateReduxGateway<PersistentState>>();
             
-            gateway.SubscribeToState(stateComponent);
-            gateway.UnsubscribeFromState(stateComponent);
+            gateway.SubscribeToState(component);
+            gateway.UnsubscribeFromState(component);
 
             var newState = new PersistentState("my value");
             
@@ -121,12 +121,12 @@ public abstract class StateInstanciableFromActionExecutionTests
         {
             var scope = Guid.NewGuid();
             
-            var stateComponent = Components.SomeComponent;
+            var component = Components.SomeComponent;
         
             var gateway = GetService<IScopedStateReduxGateway<ConcatState, Guid>>();
             
-            gateway.SubscribeToState(stateComponent, scope);
-            gateway.UnsubscribeFromState(stateComponent, scope);
+            gateway.SubscribeToState(component, scope);
+            gateway.UnsubscribeFromState(component, scope);
         
             await gateway.Dispatch(new ConcatState.Concat(scope, "my value"));
 
@@ -140,12 +140,12 @@ public abstract class StateInstanciableFromActionExecutionTests
         {
             var scope = Guid.NewGuid();
             
-            var stateComponent = Components.SomeComponent;
+            var component = Components.SomeComponent;
         
             var gateway = GetService<IScopedStateReduxGateway<PersistentState, Guid>>();
             
-            gateway.SubscribeToState(stateComponent, scope);
-            gateway.UnsubscribeFromState(stateComponent, scope);
+            gateway.SubscribeToState(component, scope);
+            gateway.UnsubscribeFromState(component, scope);
 
             var newState = new PersistentState("my value");
             

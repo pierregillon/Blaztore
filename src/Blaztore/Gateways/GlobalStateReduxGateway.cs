@@ -26,9 +26,9 @@ internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState
     }
 
     public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
-    public void UnsubscribeFromState(IComponentBase stateComponent)
+    public void UnsubscribeFromState(IComponentBase component)
     {
-        _subscriptions.Remove(stateComponent);
+        _subscriptions.Remove(component);
         
         if (!typeof(TState).IsPersistentState() && _subscriptions.NoMoreSubscribers(typeof(TState)))
         {

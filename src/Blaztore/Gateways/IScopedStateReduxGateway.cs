@@ -8,5 +8,5 @@ public interface IScopedStateReduxGateway<TState, in TScope> where TState : ISco
 {
     TState SubscribeToState(IComponentBase component, TScope? scope);
     Task Dispatch(IScopedAction<TState, TScope> action);
-    void UnsubscribeFromState(IComponentBase stateComponent, TScope? scope);
+    void UnsubscribeFromState(IComponentBase component, TScope? scope);
 }

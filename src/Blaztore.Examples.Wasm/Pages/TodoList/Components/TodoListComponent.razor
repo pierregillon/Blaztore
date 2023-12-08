@@ -1,6 +1,7 @@
 @using Blaztore.Components
 @using Blaztore.Gateways
-@inherits Blaztore.Components.BlaztoreComponentBase<TodoListState>
+
+@inherits BlaztoreComponentBase<TodoListState>
 
 @foreach (var task in State.TodoListItems)
 {

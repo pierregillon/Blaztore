@@ -27,11 +27,11 @@ internal class Subscriptions
         }
     }
 
-    public void Remove(IComponentBase stateComponent)
+    public void Remove(IComponentBase component)
     {
         lock (_subscriptions)
         {
-            _subscriptions.RemoveAll(subscription => subscription.ComponentId == stateComponent.Id);
+            _subscriptions.RemoveAll(subscription => subscription.ComponentId == component.Id);
         }
     }
 
