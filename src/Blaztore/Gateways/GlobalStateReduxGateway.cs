@@ -4,35 +4,29 @@ using Blaztore.States;
 
 namespace Blaztore.Gateways;
 
-internal class GlobalStateReduxGateway<TState> : IGlobalStateReduxGateway<TState> 
+internal class GlobalStateReduxGateway<TState>(
+    IActionDispatcher actionDispatcher,
+    IStore store,
+    Subscriptions subscriptions
+)
+    : IGlobalStateReduxGateway<TState>
     where TState : IGlobalState
 {
-    private readonly IActionDispatcher _actionDispatcher;
-    private readonly IStore _store;
-    private readonly Subscriptions _subscriptions;
-
-    public GlobalStateReduxGateway(IActionDispatcher actionDispatcher, IStore store, Subscriptions subscriptions)
-    {
-        _actionDispatcher = actionDispatcher;
-        _store = store;
-        _subscriptions = subscriptions;
-    }
-
     public TState SubscribeToState(IComponentBase component)
     {
-        _subscriptions.Add(component, typeof(TState));
+        subscriptions.TryAdd(component, typeof(TState));
         
-        return _store.GetStateOrCreateDefault<TState>();
+        return store.GetStateOrCreateDefault<TState>();
     }
 
-    public Task Dispatch(IAction<TState> action) => _actionDispatcher.Dispatch(action);
+    public Task Dispatch(IAction<TState> action) => actionDispatcher.Dispatch(action);
     public void UnsubscribeFromState(IComponentBase component)
     {
-        _subscriptions.Remove(component);
+        subscriptions.Remove(component);
         
-        if (!typeof(TState).IsPersistentState() && _subscriptions.NoMoreSubscribers(typeof(TState)))
+        if (!typeof(TState).IsPersistentState() && subscriptions.NoMoreSubscribers(typeof(TState)))
         {
-            _store.Remove<TState>();
+            store.Remove<TState>();
         }
     }
 }

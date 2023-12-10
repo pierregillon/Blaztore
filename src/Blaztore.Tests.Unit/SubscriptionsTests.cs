@@ -13,7 +13,7 @@ public class SubscriptionsTests
     {
         var component = CreateComponent();
         
-        _subscriptions.Add(component, typeof(TestState), DefaultScope.Value);
+        _subscriptions.TryAdd(component, typeof(TestState), DefaultScope.Value);
         
         _subscriptions.ReRenderSubscribers(typeof(TestState));
         
@@ -27,8 +27,8 @@ public class SubscriptionsTests
     {
         var component = CreateComponent();
         
-        _subscriptions.Add(component, typeof(TestState), DefaultScope.Value);
-        _subscriptions.Add(component, typeof(TestState), DefaultScope.Value);
+        _subscriptions.TryAdd(component, typeof(TestState), DefaultScope.Value);
+        _subscriptions.TryAdd(component, typeof(TestState), DefaultScope.Value);
         
         _subscriptions.ReRenderSubscribers(typeof(TestState));
         
@@ -42,7 +42,7 @@ public class SubscriptionsTests
     {
         var component = CreateComponent();
         
-        _subscriptions.Add(component, typeof(TestState), DefaultScope.Value);
+        _subscriptions.TryAdd(component, typeof(TestState), DefaultScope.Value);
 
         _subscriptions.Remove(component);
         

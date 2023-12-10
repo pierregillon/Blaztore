@@ -26,9 +26,20 @@ public abstract class BlaztoreComponentBase : ExtendedComponentBase, IComponentB
 public abstract class BlaztoreComponentBase<TState> : BlaztoreComponentBase, IDisposable 
     where TState : IGlobalState
 {
-    [Inject] public IGlobalStateReduxGateway<TState> Gateway { get; set; } = default!;
-    
+    [Inject]
+    public IGlobalStateReduxGateway<TState> Gateway { get; set; } = default!;
+
     protected TState State => Gateway.SubscribeToState(this);
+
+    protected override void OnInitialized()
+    {
+        // This allows to subscribe to the state and
+        // initialize the default state if needed.
+        _ = Gateway.SubscribeToState(this);
+        
+        base.OnInitialized();
+    }
+
     protected Task Dispatch(IAction<TState> action) => Gateway.Dispatch(action);
 
     public virtual void Dispose()
@@ -42,8 +53,18 @@ public abstract class BlaztoreComponentBaseWithComponentState<TState> : Blaztore
     where TState : IComponentState
 {
     [Inject] public IComponentStateReduxGateway<TState> Gateway { get; set; } = default!;
-    
+
     protected TState State => Gateway.SubscribeToState(this);
+
+    protected override void OnInitialized()
+    {
+        // This allows to subscribe to the state and
+        // initialize the default state if needed.
+        _ = Gateway.SubscribeToState(this);
+        
+        base.OnInitialized();
+    }
+
     protected Task Dispatch(IComponentAction<TState> action) => Gateway.Dispatch(action);
 
     public virtual void Dispose()
@@ -61,6 +82,16 @@ public abstract class BlaztoreComponentBaseWithScopedState<TState, TScope> : Bla
     protected abstract TScope Scope { get; }
     
     protected TState State => Gateway.SubscribeToState(this, Scope);
+    
+    protected override void OnInitialized()
+    {
+        // This allows to subscribe to the state and
+        // initialize the default state if needed.
+        _ = Gateway.SubscribeToState(this, Scope);
+        
+        base.OnInitialized();
+    }
+
     protected Task Dispatch(IScopedAction<TState, TScope> action) => Gateway.Dispatch(action);
 
     public virtual void Dispose()

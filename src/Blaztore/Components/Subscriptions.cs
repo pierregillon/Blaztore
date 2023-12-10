@@ -6,7 +6,7 @@ internal class Subscriptions
 {
     private readonly List<Subscription> _subscriptions = new();
 
-    public void Add(IComponentBase component, Type stateType, object? stateScope)
+    public void TryAdd(IComponentBase component, Type stateType, object? stateScope)
     {
         lock (_subscriptions)
         {
