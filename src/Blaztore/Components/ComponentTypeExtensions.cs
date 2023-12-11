@@ -6,20 +6,21 @@ namespace Blaztore.Components;
 
 public static class ComponentTypeExtensions
 {
-    private static readonly IDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeToParameters =
-        new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
+    private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeToParameters = new();
     
     public static IEnumerable<PropertyInfo> GetParameterProperties(this Type componentType)
     {
-        if (!TypeToParameters.TryGetValue(componentType, out var parameters))
+        if (TypeToParameters.TryGetValue(componentType, out var parameters))
         {
-            parameters = componentType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null)
-                .ToArray();
-
-            TypeToParameters.TryAdd(componentType, parameters);
+            return parameters;
         }
+
+        parameters = componentType
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null)
+            .ToArray();
+
+        TypeToParameters.TryAdd(componentType, parameters);
 
         return parameters;
     }

@@ -36,6 +36,21 @@ public class ComponentTypeExtensionsTests
     }
     
     [Fact]
+    public void Getting_parameters_is_thread_safe()
+    {
+        var tasks = Enumerable.Range(0, 10)
+            .Select(_ => Task.Run(() => typeof(SomeComponent).GetParameterProperties()))
+            .Cast<Task>()
+            .ToArray();
+
+        var action = () => Task.WaitAll(tasks);
+
+        action
+            .Should()
+            .NotThrow();
+    }
+    
+    [Fact]
     public void Getting_multiple_times_the_parameter_properties_of_the_same_type_uses_cache()
     {
         _ = typeof(SomeComponent).GetParameterProperties();
