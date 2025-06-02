@@ -1,6 +1,7 @@
 using Blaztore.ActionHandling;
 using Blaztore.Actions;
 using Blaztore.Events;
+using Blaztore.Examples.Wasm.Pages.TodoList.Components.Creation.GenericActions;
 using Blaztore.Examples.Wasm.Services;
 using Blaztore.States;
 
@@ -60,8 +61,11 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
                     return;
                 }
 
-                await Api.Create(Guid.NewGuid(), state.NewTaskDescription);
-                await ActionDispatcher.Dispatch(new EndAddingNewTask());
+                await ActionDispatcher.Dispatch(
+                    new CreateTask(state.NewTaskDescription), 
+                    new EndAddingNewTask()
+                );
+                
                 await EventPublisher.Publish(new TaskCreated(state.NewTaskDescription));
             }
         }
