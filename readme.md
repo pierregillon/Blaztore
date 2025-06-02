@@ -1,6 +1,8 @@
 # Blaztore
 
 [![.NET](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/pierregillon/Blaztore/actions/workflows/dotnet.yml)
+[![Version](https://img.shields.io/badge/dynamic/xml?color=blue&label=version&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)](https://www.nuget.org/packages/Blaztore)
+[![Nuget](https://img.shields.io/badge/Nuget-available%20-green)](https://www.nuget.org/packages/Blaztore)
 
 ![blaztore home](./assets/blaztore_home.png)
 
