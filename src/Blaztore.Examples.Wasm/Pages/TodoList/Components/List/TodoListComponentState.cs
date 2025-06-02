@@ -1,9 +1,11 @@
 using Blaztore.ActionHandling;
 using Blaztore.Actions;
+using Blaztore.Events;
+using Blaztore.Examples.Wasm.Pages.TodoList.Components.Creation;
 using Blaztore.Examples.Wasm.Services;
 using Blaztore.States;
 
-namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
+namespace Blaztore.Examples.Wasm.Pages.TodoList.Components.List;
 
 public record TodoListState(IReadOnlyCollection<TaskListItem> TodoListItems) : IGlobalState
 {
@@ -53,5 +55,11 @@ public record TodoListState(IReadOnlyCollection<TaskListItem> TodoListItems) : I
                 await ActionDispatcher.Dispatch(new Load());
             }
         }
+    }
+
+    public record ReloadOnTaskCreated(IActionDispatcher ActionDispatcher) : IEventListener<TaskCreated>
+    {
+        public async Task On(TaskCreated @event) =>
+            await ActionDispatcher.Dispatch(new Load());
     }
 }

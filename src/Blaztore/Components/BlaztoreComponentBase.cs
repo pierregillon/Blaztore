@@ -92,7 +92,8 @@ public abstract class BlaztoreComponentBaseWithScopedState<TState, TScope> : Bla
         base.OnInitialized();
     }
 
-    protected Task Dispatch(IScopedAction<TState, TScope> action) => Gateway.Dispatch(action);
+    protected Task Dispatch(IScopedAction<TState, TScope> action) =>
+        Gateway.Dispatch(action);
 
     public virtual void Dispose()
     {

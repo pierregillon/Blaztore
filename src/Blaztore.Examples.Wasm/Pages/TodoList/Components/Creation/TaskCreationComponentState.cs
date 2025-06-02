@@ -1,9 +1,10 @@
 using Blaztore.ActionHandling;
 using Blaztore.Actions;
+using Blaztore.Events;
 using Blaztore.Examples.Wasm.Services;
 using Blaztore.States;
 
-namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
+namespace Blaztore.Examples.Wasm.Pages.TodoList.Components.Creation;
 
 public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) : IGlobalState
 {
@@ -49,7 +50,7 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 
     public record ExecuteTaskCreation : IAction<TaskCreationState>
     {
-        private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher)
+        private record Effector(IStore Store, ITodoListApi Api, IActionDispatcher ActionDispatcher, IEventPublisher EventPublisher)
             : IEffect<TaskCreationState, ExecuteTaskCreation>
         {
             public async Task Effect(TaskCreationState state, ExecuteTaskCreation action)
@@ -61,7 +62,7 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
 
                 await Api.Create(Guid.NewGuid(), state.NewTaskDescription);
                 await ActionDispatcher.Dispatch(new EndAddingNewTask());
-                await ActionDispatcher.Dispatch(new TodoListState.Load());
+                await EventPublisher.Publish(new TaskCreated(state.NewTaskDescription));
             }
         }
     }
@@ -79,3 +80,5 @@ public record TaskCreationState(bool IsAddingTask, string? NewTaskDescription) :
         }
     }
 }
+
+public record TaskCreated(string Description) : IEvent;

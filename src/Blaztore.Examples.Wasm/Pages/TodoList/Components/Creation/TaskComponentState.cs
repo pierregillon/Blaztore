@@ -1,9 +1,10 @@
 using Blaztore.ActionHandling;
 using Blaztore.Actions;
+using Blaztore.Examples.Wasm.Pages.TodoList.Components.List;
 using Blaztore.Examples.Wasm.Services;
 using Blaztore.States;
 
-namespace Blaztore.Examples.Wasm.Pages.TodoList.Components;
+namespace Blaztore.Examples.Wasm.Pages.TodoList.Components.Creation;
 
 public record TaskComponentState(bool IsDeleting) : IScopedState<Guid>
 {
