@@ -86,7 +86,7 @@ Use the `State` to render you html elements :
 ```html
 <input value="@State.NewTaskDescription" ... />
 ```
-Use `Dispatch()` to execute command.
+Use `Dispatch()` to execute an action.
 ```html
 <button onclick="@(() => Dispatch(new StartAddingNewTask()))">
     New task
@@ -150,7 +150,7 @@ public record ExecuteTaskCreationEffect(
             return;
         }
 
-        await Api.Create(Guid.NewGuid(), state.NewTaskDescription);
+        await Api.CreateTask(Guid.NewGuid(), state.NewTaskDescription);
         await ActionDispatcher.Dispatch(new EndAddingNewTask());
         await ActionDispatcher.Dispatch(new TodoListState.Load());
     }
@@ -159,7 +159,50 @@ public record ExecuteTaskCreationEffect(
 To see full examples go [here](src/Blaztore.Examples.Wasm/Pages/TodoList/Components/TodoListComponentState.cs) or
 [here](src/Blaztore.Examples.Wasm/Pages/TodoList/Components/TaskCreationComponentState.cs).
 
-## Examples
+### Communicate between states with events
+
+To avoid coupling between states, you can use events to communicate.
+
+In the example above, the `TodoListState.Load()` action is dispatched by the `TaskCreationState.ExecuteTaskCreation` effect, creating coupling between the two states.
+
+If 10 others states need to be updated, you are forced to dispatch 10 load states in this effect.
+
+To avoid this, you can create an event and dispatch it from the effect :
+
+```csharp
+public record TaskCreated(string Description) : IEvent;
+
+public record ExecuteTaskCreationEffect(...) : IEffect<TaskCreationState, ExecuteTaskCreation>
+{
+    public async Task Effect(TaskCreationState state, ExecuteTaskCreation action)
+    {
+        if (string.IsNullOrWhiteSpace(state.NewTaskDescription))
+        {
+            return;
+        }
+
+        await Api.CreateTask(Guid.NewGuid(), state.NewTaskDescription);
+        await ActionDispatcher.Dispatch(new EndAddingNewTask());
+        
+        // Dispatch the event
+        await EventPublisher.Publish(new TaskCreated(state.NewTaskDescription));
+    }
+}
+```
+
+Then, you can subscribe to the event and reload the state `TodoListState` :
+
+```csharp
+public class ReloadOnTaskCreated(IActionDispatcher actionDispatcher) : IEventListener<TaskCreated>
+{
+    public async Task On(TaskCreated @event) =>
+        await actionDispatcher.Dispatch(new Load());
+}
+```
+
+In that was, you decouple states.
+
+## Full examples
 
 You can find an example app in Blazor Wasm with Blaztor implementation [here](/src/Blaztore.Examples.Wasm).
 
@@ -179,6 +222,9 @@ By default, state are instanciated once the first component requires it. If an a
 If you want to allow your actions to instanciate a default state, you can make your state implement `IStateInstanciableFromActionExecution`.
 
 ## Release notes
+
+### v3.0 : .NET 9.0 support
+- migrate all projects to .NET 9.0
 
 ### v2.0: rework api
 - refactor: rename `StateComponent` to `BlaztoreComponentBase` (remove the StateComponent concept)

@@ -1,14 +1,14 @@
 using AngleSharp.Dom;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 
 namespace Blaztore.Examples.Wasm.Tests;
 
-public class ElementAssertions : ReferenceTypeAssertions<IElement, ElementAssertions>
+public class ElementAssertions(IElement subject)
+    : ReferenceTypeAssertions<IElement, ElementAssertions>(subject, AssertionChain.GetOrCreate())
 {
-    private readonly IElement _subject;
-
-    public ElementAssertions(IElement subject) : base(subject) => _subject = subject;
+    private readonly IElement _subject = subject;
 
     public void BeDisabled() => _subject
         .Attributes["disabled"]

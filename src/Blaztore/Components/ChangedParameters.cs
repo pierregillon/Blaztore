@@ -17,7 +17,7 @@ public record ChangedParameters(IReadOnlyCollection<ChangedParameter> Values) : 
 
     public static ChangedParameters Build(
         IReadOnlyDictionary<string, object?> currentValues,
-        IReadOnlyDictionary<string, object> newValues
+        IReadOnlyDictionary<string, object?> newValues
     )
     {
         var changedParameters =
