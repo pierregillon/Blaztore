@@ -15,8 +15,4 @@
       <ProjectReference Include="..\Blaztore\Blaztore.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
-    </ItemGroup>
-
 </Project>
