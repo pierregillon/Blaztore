@@ -22,26 +22,48 @@ Blazor does not contain a native Flux/Redux or MVU api internally.
 The objective of this library is to provide a very **simple and minimalist** api to implement a Flux/Redux architecture.
 
 This repository is largely inspired by the following existing repositories:
-- [blazor-state](https://github.com/TimeWarpEngineering/blazor-state)
+- [TimeWarp (ex: blazor-state)](https://github.com/TimeWarpEngineering/timewarp-state)
 - [Fluxor](https://github.com/mrpmorris/Fluxor/tree/master)
 
 If you are not satisfied by this library, don't hesitate to check them out, they are great.
 
 ## Advantages 💪
 
-Compared to the listed existing libraries, Blaztore has the following advantages:
-- ✅ Focused on **immutability** for every concepts (State, Action, ...)
-- ✅ Never force you to inherit from a **base class or a base record**. Every concepts are based on interfaces. It allows you to structure your code as you like (multiple handling, file structure, ...)
-- ✅ Use the underlying [MediatR](https://github.com/jbogard/MediatR) library to dispatch actions. 
-It is highly extendable and allows you to easily implement **pipeline** or **preprocessing** to add loggers, retry pattern, ...
-- ✅ Use the **Flux/Redux** terminology and not a custom one.
-- ✅ Enable to store **multiple instances** of the same state type, identified by a unique id.
+### Immutability
+
+Every concept (State, Action, Event, ...) is **immutable**.
+
+### Flexibility
+
+- Never force you to inherit from a **base class or a base record** for your state or action.
+- Every concept is based on interfaces.
+- It allows you to structure your code as you like (multiple handling, file structure, ...)  
+
+### Extensibility
+
+- Use the underlying [MediatR](https://github.com/jbogard/MediatR) library to dispatch actions.
+- It is highly extendable and allows you to easily implement **pipeline** or **preprocessing** to add loggers, retry pattern, ...
+
+### Coherence
+
+- Use the **Flux/Redux** terminology and not a custom one.
+- State, Action, Reducer, Effect. That's it.
+
+### Per component state
+
+- Enable to store **multiple instances** of the same state type, identified by a unique id.
+
+Example: 2 counters with each one having its own state.
+
+![Per component](./assets/blaztore_state_per_component.gif)
+
+See the code [here](./src/Blaztore.Examples.Wasm/Pages/Counters).
 
 ## Installation 💻
 
-You can download the latest release NuGet packages from the official Blaztor nuget pages.
+You can download from nuget:
 
-- [Blaztore](https://www.nuget.org/packages/Blaztore) ![Nuget](https://img.shields.io/badge/dynamic/xml?color=blue&label=Nuget&prefix=v&query=//Project/PropertyGroup/Version/text()&url=https://raw.githubusercontent.com/pierregillon/Blaztore/main/src/Blaztore/Blaztore.csproj)
+    dotnet add package Blaztore
 
 ## Getting started 🏁
 
