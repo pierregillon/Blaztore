@@ -31,7 +31,7 @@ If you are not satisfied by this library, don't hesitate to check them out, they
 
 ### Immutability
 
-Every concept (State, Action, Event, ...) is **immutable**.
+- Every concept (State, Action, Event, ...) is **immutable**.
 
 ### Flexibility
 
